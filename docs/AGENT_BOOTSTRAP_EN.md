@@ -1,0 +1,79 @@
+# 🚀 Synapse Agent Bootstrap
+
+> **FOR AI AGENTS ONLY** — When AI reads this file, execute the steps below in order.
+
+---
+
+## 🎯 Quick Command (One-Line Setup)
+
+```bash
+synapse init && synapse analyze . --full && synapse watch start --daemon
+```
+
+---
+
+## 📋 Step-by-Step Setup
+
+### Step 1: Initialize Synapse
+```bash
+synapse init
+```
+- Creates `.synapse/`, `.context/`, `.antigravity/` directories
+- Auto-generates `rules.md`
+
+### Step 2: Full Index
+```bash
+synapse analyze . --full
+```
+- Parses all code files
+- Builds vector index + dependency graph
+
+### Step 3: Start Watcher (Optional)
+```bash
+synapse watch start --daemon
+```
+- Background file monitoring
+- Auto incremental indexing
+
+### Step 4: Read Architecture
+```bash
+# Read file
+.synapse/INTELLIGENCE.md
+```
+- Understand project architecture
+- Identify core modules and dependencies
+
+---
+
+## ✅ Setup Complete Checklist
+
+After running the commands above, verify:
+
+- [ ] `.synapse/` directory exists
+- [ ] `.synapse/dependency_graph.gml` created
+- [ ] `synapse watch status` → Running (optional)
+
+---
+
+## 🔧 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| synapse command not found | `pip install git+https://github.com/YOUR_USERNAME/synapse.git` |
+| ChromaDB error | `rm -rf .synapse/db && synapse analyze . --full` |
+| Watcher failure | `synapse watch stop && synapse watch start --daemon` |
+
+---
+
+## 📖 After Setup
+
+After setup complete, AI follows these rules:
+1. Run `synapse search <query>` before modifying code
+2. Run `synapse graph <file>` before refactoring
+3. Run `synapse ask "<error>" --think` on errors
+
+**Detailed Rules**: See `.antigravity/rules.md`
+
+---
+
+*Synapse v0.1.0 | *Powered by Synapse & Antigravity*
