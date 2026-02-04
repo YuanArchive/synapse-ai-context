@@ -13,6 +13,7 @@
 
 **대규모 코드베이스에서 AI 에이전트가 정확하게 작업할 수 있도록 지원**
 
+[![Synapse CI](https://github.com/YuanArchive/synapse-ai-context/actions/workflows/ci.yml/badge.svg)](https://github.com/YuanArchive/synapse-ai-context/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub stars](https://img.shields.io/github/stars/YuanArchive/synapse-ai-context?style=social)](https://github.com/YuanArchive/synapse-ai-context)
