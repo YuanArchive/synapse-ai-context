@@ -40,11 +40,17 @@ class ProjectAnalyzer:
         self.parser = CodeParser()
         # Store DB inside a hidden .synapse folder in the target project
         self.db_dir = self.project_path / ".synapse"
-        self.db_dir.mkdir(exist_ok=True)
-        self.vector_store = VectorStore(db_path=str(self.db_dir / "db"))
-
-        # Initialize Dependency Graph
-        self.code_graph = CodeGraph(storage_path=self.db_dir / "dependency_graph.gml")
+        
+        # 경로가 존재할 때만 .synapse 디렉토리 생성 및 초기화
+        if self.project_path.exists():
+            self.db_dir.mkdir(exist_ok=True)
+            self.vector_store = VectorStore(db_path=str(self.db_dir / "db"))
+            # Initialize Dependency Graph
+            self.code_graph = CodeGraph(storage_path=self.db_dir / "dependency_graph.gml")
+        else:
+            # 경로가 존재하지 않으면 나중에 analyze()에서 에러 처리
+            self.vector_store = None
+            self.code_graph = None
         self.results = []
 
     def scan_files(
