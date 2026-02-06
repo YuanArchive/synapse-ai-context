@@ -26,6 +26,22 @@ def wrap_artifact(content: str, name: str) -> str:
     return f'<synapse-artifact name="{name}">\n{content}\n</synapse-artifact>'
 
 
+def _print_protocol_reminder():
+    """
+    Print a random Synapse Protocol reminder to reinforce AI rules.
+    """
+    import random
+    
+    reminders = [
+        "[bold cyan]Tip:[/bold cyan] 🔍 **Search Before You Strike** - 코드를 먼저 찾고 수정하세요. (No Guessing)",
+        "[bold cyan]Tip:[/bold cyan] 🕸️ **Check the Graph** - `synapse graph`로 수정 영향도를 파악하세요.",
+        "[bold cyan]Tip:[/bold cyan] 🧠 **Deep Think on Failure** - 에러 발생 시 `--think`로 심층 분석하세요.",
+        "[bold cyan]Tip:[/bold cyan] 👁️ **Watch Mode** - `synapse watch start`로 실시간 인덱싱을 켜두세요.",
+    ]
+    
+    console.print(f"\n{random.choice(reminders)}")
+
+
 @app.command()
 def init(
     path: str = typer.Option(".", help="Target project path"),
@@ -218,6 +234,8 @@ def analyze(
 
         console.print("\n> Analysis complete. Ready for `synapse search`.")
         logger.info(f"Analysis complete: {summary.get('files_analyzed', summary.get('changed_files', 0))} files processed")
+        
+        _print_protocol_reminder()
         
     except SynapseError as e:
         logger.error(f"Synapse error: {e.message}")
@@ -471,6 +489,8 @@ def search(
     else:
         console.print(results_md)
 
+    _print_protocol_reminder()
+
 
 @app.command()
 def ask(
@@ -554,6 +574,8 @@ def ask(
     final_prompt += wrap_artifact(context_str, "retrieved_context")
 
     console.print(final_prompt)
+    
+    _print_protocol_reminder()
 
 
 @app.command()
@@ -649,6 +671,8 @@ def graph(
             graph_md += f"- `{name}`\n"
 
     console.print(wrap_artifact(graph_md, "dependency_graph"))
+    
+    _print_protocol_reminder()
 
 
 @app.command()
@@ -729,6 +753,8 @@ def context(
             
             console.print("\n---\n")
             console.print(wrap_artifact(result.formatted_output, "hierarchical_context"))
+            
+            _print_protocol_reminder()
     
     except Exception as e:
         if json_output:
