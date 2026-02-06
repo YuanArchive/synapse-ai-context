@@ -348,6 +348,20 @@ def search(
             console.print(f"## Error\n{msg}")
         return
 
+    # Auto-Index: Check for changes and update if needed
+    try:
+        analyzer = ProjectAnalyzer(path)
+        summary = analyzer.analyze_incremental(json_output=True)
+        
+        if summary.get("status") == "success" and summary.get("changed_files", 0) > 0:
+            if not json_output:
+                n = summary.get("changed_files")
+                console.print(f"[dim]⚡ Index synced: {n} files updated[/dim]")
+    except Exception:
+        # Fail silently on auto-index to not block search
+        pass
+
+
     db_path = str(synapse_dir / "db")
     vs = VectorStore(db_path=db_path)
     
