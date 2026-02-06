@@ -264,6 +264,25 @@ synapse analyze . --full
 - 파일이 UTF-8인지 확인
 - 바이너리 파일은 자동 제외
 
+## 11. 삭제 (Uninstallation)
+
+만약 도구를 삭제하거나 재설치하고 싶다면 다음 명령어를 사용하세요.
+
+### 패키지 삭제
+```bash
+pip uninstall synapse-tool
+```
+
+### 데이터 삭제
+프로젝트 내 생성된 데이터와 설정 파일도 함께 지우려면:
+```bash
+# Windows
+rmdir /s /q .synapse .context .antigravity
+
+# Mac/Linux
+rm -rf .synapse .context .antigravity
+```
+
 ---
 
 *Synapse v0.1.0 | *Powered by Synapse & Antigravity*

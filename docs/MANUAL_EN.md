@@ -267,6 +267,25 @@ synapse analyze . --full
 - Ensure files are UTF-8 encoded
 - Binary files are automatically excluded
 
+## 11. Uninstallation
+
+If you need to remove or reinstall the tool, use the following commands.
+
+### Remove Package
+```bash
+pip uninstall synapse-tool
+```
+
+### Remove Data
+To remove generated data and configuration files:
+```bash
+# Windows
+rmdir /s /q .synapse .context .antigravity
+
+# Mac/Linux
+rm -rf .synapse .context .antigravity
+```
+
 ---
 
 *Synapse v0.1.0 | *Powered by Synapse & Antigravity*
