@@ -175,22 +175,22 @@ class ProjectAnalyzer:
         return summary
 
     def _process_file(self, file_path, documents, metadatas, ids):
-        result = self.parser.parse_file(file_path)
-        if result:
-            self.results.append(result)
+        try:
+            result = self.parser.parse_file(file_path)
+            if result:
+                self.results.append(result)
 
-            # Register file in graph
-            self.code_graph.add_file(file_path.as_posix(), language=result["language"])
+                # Register file in graph
+                self.code_graph.add_file(file_path.as_posix(), language=result["language"])
 
-            # Register definitions
-            for definition in result.get("definitions", []):
-                self.code_graph.add_definition(definition, file_path.as_posix())
+                # Register definitions
+                for definition in result.get("definitions", []):
+                    self.code_graph.add_definition(definition, file_path.as_posix())
 
-            # Register calls (references)
-            for call in result.get("calls", []):
-                self.code_graph.add_call(file_path.as_posix(), call)
+                # Register calls (references)
+                for call in result.get("calls", []):
+                    self.code_graph.add_call(file_path.as_posix(), call)
 
-            try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
@@ -234,9 +234,11 @@ class ProjectAnalyzer:
                     })
                     ids.append(symbol_id)
 
-            except Exception as e:
-                # In quiet mode we might want to suppress this or log it
-                pass
+        except Exception as e:
+            # Log warning instead of silent failure
+            logger = get_logger()
+            logger.warning(f"Failed to process file {file_path}: {e}")
+            pass
 
     def analyze_incremental(self, json_output: bool = False) -> Dict[str, Any]:
         """

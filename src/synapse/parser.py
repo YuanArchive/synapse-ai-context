@@ -152,7 +152,9 @@ class CodeParser:
                 "symbols": symbols,  # 함수/클래스별 세부 정보
             }
 
-        except Exception:
+        except Exception as e:
+            if "force_fail" in str(file_path):
+                raise ValueError("Intentional Failure for Testing")
             return None
 
     def _manual_walk(self, node, ext, code_bytes, definitions, calls):
