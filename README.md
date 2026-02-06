@@ -190,7 +190,8 @@ your-project/
 │   ├── file_hashes.json
 │   └── INTELLIGENCE.md    # Auto-generated architecture doc
 ├── .agent/          
-│   └── rules.md           # AI agent rules
+│   ├── AI_RULES_EN.md     # AI agent rules (English)
+│   └── AI_RULES_KO.md     # AI agent rules (Korean)
 └── docs/
     ├── SYNAPSE_MANUAL_KO.md
     └── AGENT_BOOTSTRAP.md
@@ -224,10 +225,10 @@ The AI will automatically run all setup commands!
 
 ```bash
 # Antigravity / Gemini
-cp AI_RULES.md ~/.gemini/GEMINI.md
+cp AI_RULES_EN.md ~/.gemini/GEMINI.md
 
 # Cursor
-cp AI_RULES.md your-project/.cursorrules
+cp AI_RULES_EN.md your-project/.cursorrules
 ```
 
 ---

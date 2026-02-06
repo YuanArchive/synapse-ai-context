@@ -190,7 +190,8 @@ your-project/
 │   ├── file_hashes.json
 │   └── INTELLIGENCE.md    # 자동 생성 아키텍처 문서
 ├── .agent/          
-│   └── rules.md           # AI 에이전트 규칙
+│   ├── AI_RULES_KO.md     # AI 에이전트 규칙 (한글)
+│   └── AI_RULES_EN.md     # AI 에이전트 규칙 (영문)
 └── docs/
     ├── SYNAPSE_MANUAL_KO.md
     └── AGENT_BOOTSTRAP.md
@@ -224,10 +225,10 @@ AI가 자동으로 모든 설정 명령어를 실행합니다!
 
 ```bash
 # Antigravity / Gemini
-cp AI_RULES.md ~/.gemini/GEMINI.md
+cp AI_RULES_KO.md ~/.gemini/GEMINI.md
 
 # Cursor
-cp AI_RULES.md your-project/.cursorrules
+cp AI_RULES_KO.md your-project/.cursorrules
 ```
 
 ---
