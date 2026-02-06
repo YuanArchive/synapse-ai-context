@@ -39,7 +39,21 @@ def _print_protocol_reminder():
         "[bold cyan]Tip:[/bold cyan] 👁️ **Watch Mode** - `synapse watch start`로 실시간 인덱싱을 켜두세요.",
     ]
     
+
     console.print(f"\n{random.choice(reminders)}")
+
+
+def _save_output(content: str, output_path: str):
+    """
+    Save content to a file and print a success message.
+    """
+    try:
+        path = Path(output_path).resolve()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        console.print(f"[green]✓ Output saved to {path}[/green]")
+    except Exception as e:
+        console.print(f"[red]Error saving output: {e}[/red]")
 
 
 @app.command()
@@ -332,6 +346,7 @@ def search(
     json_output: bool = typer.Option(
         False, "--json", help="Output results in JSON format for machine consumption"
     ),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to a file"),
 ):
     """
     인덱싱된 코드베이스에서 시맨틱 검색을 수행합니다.
@@ -416,6 +431,8 @@ def search(
             search_md += f"\n```python\n{snippet}\n```\n\n"
         
         console.print(wrap_artifact(search_md, "hybrid_search_results"))
+        if output:
+            _save_output(search_md, output)
         return
     
     # 기존 Vector Search
@@ -499,9 +516,15 @@ def search(
                     results_md += f"- `{rel}`\n"
 
     if len(results_md) > 500:
-        console.print(wrap_artifact(results_md, "search_results"))
+        if output:
+            _save_output(results_md, output)
+        else:
+            console.print(wrap_artifact(results_md, "search_results"))
     else:
-        console.print(results_md)
+        if output:
+            _save_output(results_md, output)
+        else:
+            console.print(results_md)
 
     _print_protocol_reminder()
 
@@ -514,6 +537,7 @@ def ask(
     think: bool = typer.Option(
         False, "--think", help="Enable Deep Think Mode (Chain of Thought)"
     ),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to a file"),
 ):
     """
     Generate a prompt with retrieved context for the LLM.
@@ -587,7 +611,12 @@ def ask(
     final_prompt += "### Context:\n"
     final_prompt += wrap_artifact(context_str, "retrieved_context")
 
-    console.print(final_prompt)
+    final_prompt += wrap_artifact(context_str, "retrieved_context")
+
+    if output:
+        _save_output(final_prompt, output)
+    else:
+        console.print(final_prompt)
     
     _print_protocol_reminder()
 
@@ -596,6 +625,7 @@ def ask(
 def graph(
     file_path: str = typer.Argument(..., help="Target file path to analyze"),
     path: str = typer.Option(".", help="Project root path (containing .synapse)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to a file"),
 ):
     """
     Visualize dependencies (Imports/Calls) and dependents (Callers) for a file.
@@ -684,7 +714,10 @@ def graph(
         for name in defines:
             graph_md += f"- `{name}`\n"
 
-    console.print(wrap_artifact(graph_md, "dependency_graph"))
+    if output:
+        _save_output(graph_md, output)
+    else:
+        console.print(wrap_artifact(graph_md, "dependency_graph"))
     
     _print_protocol_reminder()
 
@@ -698,6 +731,7 @@ def context(
     json_output: bool = typer.Option(
         False, "--json", help="Output results in JSON format"
     ),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to a file"),
 ):
     """
     Active 파일 기준으로 최적화된 계층적 컨텍스트를 생성합니다.
@@ -766,7 +800,10 @@ def context(
                     console.print(f"- `{f}`")
             
             console.print("\n---\n")
-            console.print(wrap_artifact(result.formatted_output, "hierarchical_context"))
+            if output:
+                _save_output(result.formatted_output, output)
+            else:
+                console.print(wrap_artifact(result.formatted_output, "hierarchical_context"))
             
             _print_protocol_reminder()
     
