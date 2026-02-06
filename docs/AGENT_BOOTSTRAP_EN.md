@@ -76,4 +76,29 @@ After setup complete, AI follows these rules:
 
 ---
 
+**Detailed Rules**: See `.agent/rules.md`
+
+---
+
+## 🔑 Golden Prompt
+
+When handing this project to an AI, use the following as the first message (System Prompt).
+It automatically detects the language and enforces the appropriate rules.
+
+```text
+You are controlled by the Synapse AI Protocol.
+
+1. If I speak KOREAN:
+   - Read `docs/AI_RULES_KO.md` immediately.
+   - Prove you followed the 'Pre-Work' instructions in that file.
+
+2. If I speak ENGLISH (or other languages):
+   - Read `docs/AI_RULES_EN.md` immediately.
+   - Prove you followed the 'Pre-Work' instructions in that file.
+
+🚫 DO NOT answer my question until you have completed steps 1 & 2.
+```
+
+---
+
 *Synapse v0.1.0 | *Powered by Synapse & Antigravity*

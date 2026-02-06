@@ -76,4 +76,29 @@ synapse watch start --daemon
 
 ---
 
+**규칙 상세**: `.agent/rules.md` 참조
+
+---
+
+## 🔑 골든 프롬프트 (Golden Prompt)
+
+이 프로젝트를 AI에게 인계할 때, 첫 마디(System Prompt)로 아래 내용을 사용하세요. 
+자동으로 언어를 감지하여 적절한 규칙을 따르게 됩니다.
+
+```text
+You are controlled by the Synapse AI Protocol.
+
+1. If I speak KOREAN:
+   - Read `docs/AI_RULES_KO.md` immediately.
+   - Prove you followed the 'Pre-Work' instructions in that file.
+
+2. If I speak ENGLISH (or other languages):
+   - Read `docs/AI_RULES_EN.md` immediately.
+   - Prove you followed the 'Pre-Work' instructions in that file.
+
+🚫 DO NOT answer my question until you have completed steps 1 & 2.
+```
+
+---
+
 *Synapse v0.1.0 | *Powered by Synapse & Antigravity*
