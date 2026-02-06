@@ -118,14 +118,21 @@ def init(
             elif manual_dst.exists():
                 console.print("- [ ] `docs/SYNAPSE_MANUAL_KO.md` already exists")
             
-            # AGENT_BOOTSTRAP.md 복사
-            bootstrap_src = source_docs / "AGENT_BOOTSTRAP.md"
-            bootstrap_dst = docs_dir / "AGENT_BOOTSTRAP.md"
-            if bootstrap_src.exists() and not bootstrap_dst.exists():
-                shutil.copy2(bootstrap_src, bootstrap_dst)
-                console.print("- [x] Copied `docs/AGENT_BOOTSTRAP.md`")
-            elif bootstrap_dst.exists():
-                console.print("- [ ] `docs/AGENT_BOOTSTRAP.md` already exists")
+            # AGENT_BOOTSTRAP 복사 (KO/EN)
+            bootstrap_files = ["AGENT_BOOTSTRAP_KO.md", "AGENT_BOOTSTRAP_EN.md"]
+            
+            for bs_file in bootstrap_files:
+                src = source_docs / bs_file
+                dst = docs_dir / bs_file
+                
+                if src.exists():
+                    if not dst.exists():
+                        shutil.copy2(src, dst)
+                        console.print(f"- [x] Copied `docs/{bs_file}`")
+                    else:
+                        console.print(f"- [ ] `docs/{bs_file}` already exists")
+                else:
+                    console.print(f"- [yellow]Warning: Source {bs_file} not found[/yellow]")
         else:
             console.print("- [yellow]Warning: Source docs not found[/yellow]")
     except Exception as e:
