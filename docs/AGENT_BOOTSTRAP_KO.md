@@ -18,7 +18,7 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 ```bash
 synapse init
 ```
-- `.synapse/`, `.context/`, `.antigravity/` 디렉토리 생성
+- `.synapse/`, `.context/`, `.agent/` 디렉토리 생성
 - `rules.md` 자동 생성
 
 ### Step 2: 전체 인덱싱
@@ -72,7 +72,7 @@ synapse watch start --daemon
 2. 리팩토링 전 `synapse graph <file>` 확인
 3. 에러 발생 시 `synapse ask "<error>" --think` 실행
 
-**규칙 상세**: `.antigravity/rules.md` 참조
+**규칙 상세**: `.agent/rules.md` 참조
 
 ---
 

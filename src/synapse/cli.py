@@ -29,22 +29,22 @@ def wrap_artifact(content: str, name: str) -> str:
 @app.command()
 def init(
     path: str = typer.Option(".", help="Target project path"),
-    antigravity: bool = typer.Option(
+    agent: bool = typer.Option(
         False,
-        "--antigravity",
-        help="Initialize with Antigravity-optimized context structure",
+        "--agent",
+        help="Initialize with generic Agent-optimized context structure",
     ),
 ):
     """
     Initialize Synapse in the target directory.
-    Creates .synapse, .context directories, .antigravity/rules.md, and docs/.
+    Creates .synapse, .context, .agent/rules.md, and docs/.
     """
     import shutil
     
     target = Path(path).resolve()
     synapse_dir = target / ".synapse"
     context_dir = target / ".context"
-    ag_dir = target / ".antigravity"
+    agent_dir = target / ".agent"
     docs_dir = target / "docs"
 
     console.print("## Synapse Initialization")
@@ -63,13 +63,13 @@ def init(
         context_dir.mkdir(exist_ok=True)
         console.print("- [x] Created `.context` directory")
 
-    # 3. Create .antigravity/rules.md
-    if antigravity or not ag_dir.exists():
-        if not ag_dir.exists():
-            ag_dir.mkdir(exist_ok=True)
-            console.print("- [x] Created `.antigravity` directory")
+    # 3. Create .agent/rules.md
+    if agent or not agent_dir.exists():
+        if not agent_dir.exists():
+            agent_dir.mkdir(exist_ok=True)
+            console.print("- [x] Created `.agent` directory")
 
-        rules_file = ag_dir / "rules.md"
+        rules_file = agent_dir / "rules.md"
         rules_content = """# ⚡️ Synapse Protocol: MANDATORY OPERATING PROCEDURES
 
 You are operating within a **Synapse-Augmented Codebase**.
@@ -113,11 +113,11 @@ If a build fails or an error occurs:
 ---
 **By proceeding, you agree to follow these protocols strictly.**
 """
-        if rules_file.exists() and not antigravity:
-            console.print("- [ ] `.antigravity/rules.md` already exists")
+        if rules_file.exists() and not agent:
+            console.print("- [ ] `.agent/rules.md` already exists")
         else:
             rules_file.write_text(rules_content, encoding="utf-8")
-            console.print("- [x] Created/Updated `.antigravity/rules.md`")
+            console.print("- [x] Created/Updated `.agent/rules.md`")
 
     # 4. Create docs/ and copy manuals
     if not docs_dir.exists():

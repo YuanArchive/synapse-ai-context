@@ -55,7 +55,7 @@ synapse init
 │   ├── synapse_YYYYMMDD.log  # 로그 파일 (NEW)
 │   └── INTELLIGENCE.md
 ├── .context/              # 컨텍스트 저장소
-└── .antigravity/          # AI 에이전트 규칙
+└── .agent/          # AI 에이전트 규칙
     └── rules.md
 ```
 
@@ -164,7 +164,7 @@ synapse watch stop
 
 ### 규칙 파일 위치
 ```
-프로젝트/.antigravity/rules.md
+프로젝트/.agent/rules.md
 ```
 
 ### AI 에이전트 워크플로우
@@ -277,10 +277,10 @@ pip uninstall synapse-tool
 프로젝트 내 생성된 데이터와 설정 파일도 함께 지우려면:
 ```bash
 # Windows
-rmdir /s /q .synapse .context .antigravity
+rmdir /s /q .synapse .context .agent
 
 # Mac/Linux
-rm -rf .synapse .context .antigravity
+rm -rf .synapse .context .agent
 ```
 
 ---

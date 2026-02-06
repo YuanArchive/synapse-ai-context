@@ -189,7 +189,7 @@ your-project/
 │   ├── dependency_graph.gml
 │   ├── file_hashes.json
 │   └── INTELLIGENCE.md    # 자동 생성 아키텍처 문서
-├── .antigravity/          
+├── .agent/          
 │   └── rules.md           # AI 에이전트 규칙
 └── docs/
     ├── SYNAPSE_MANUAL_KO.md

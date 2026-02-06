@@ -18,7 +18,7 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 ```bash
 synapse init
 ```
-- Creates `.synapse/`, `.context/`, `.antigravity/` directories
+- Creates `.synapse/`, `.context/`, `.agent/` directories
 - Auto-generates `rules.md`
 
 ### Step 2: Full Index
@@ -72,7 +72,7 @@ After setup complete, AI follows these rules:
 2. Run `synapse graph <file>` before refactoring
 3. Run `synapse ask "<error>" --think` on errors
 
-**Detailed Rules**: See `.antigravity/rules.md`
+**Detailed Rules**: See `.agent/rules.md`
 
 ---
 

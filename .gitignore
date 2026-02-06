@@ -13,7 +13,7 @@ build/
 # Synapse runtime data (each project has its own)
 .synapse/
 .context/
-.antigravity/
+.agent/
 *.log
 
 # IDE

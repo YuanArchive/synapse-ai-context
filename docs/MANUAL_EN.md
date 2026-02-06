@@ -55,7 +55,7 @@ your-project/
 │   ├── synapse_YYYYMMDD.log  # Log files
 │   └── INTELLIGENCE.md
 ├── .context/              # Context storage
-├── .antigravity/          # AI agent rules
+├── .agent/          # AI agent rules
 │   └── rules.md
 └── docs/
     ├── SYNAPSE_MANUAL_KO.md
@@ -167,7 +167,7 @@ synapse watch stop
 
 ### Rules File Location
 ```
-project/.antigravity/rules.md
+project/.agent/rules.md
 ```
 
 ### AI Agent Workflow
@@ -280,10 +280,10 @@ pip uninstall synapse-tool
 To remove generated data and configuration files:
 ```bash
 # Windows
-rmdir /s /q .synapse .context .antigravity
+rmdir /s /q .synapse .context .agent
 
 # Mac/Linux
-rm -rf .synapse .context .antigravity
+rm -rf .synapse .context .agent
 ```
 
 ---
