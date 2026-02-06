@@ -19,7 +19,7 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 synapse init
 ```
 - `.synapse/`, `.context/`, `.agent/` 디렉토리 생성
-- `rules.md` 자동 생성
+- `AI_RULES_KO.md`, `AI_RULES_EN.md` 자동 생성
 
 ### Step 2: 전체 인덱싱
 ```bash

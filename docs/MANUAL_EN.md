@@ -55,8 +55,9 @@ your-project/
 │   ├── synapse_YYYYMMDD.log  # Log files
 │   └── INTELLIGENCE.md
 ├── .context/              # Context storage
-├── .agent/          # AI agent rules
-│   └── rules.md
+├└── .agent/          # AI agent rules
+    ├── AI_RULES_KO.md
+    └── AI_RULES_EN.md
 └── docs/
     ├── SYNAPSE_MANUAL_KO.md
     └── AGENT_BOOTSTRAP.md
@@ -167,7 +168,7 @@ synapse watch stop
 
 ### Rules File Location
 ```
-project/.agent/rules.md
+project/.agent/AI_RULES_EN.md (or _KO.md)
 ```
 
 ### AI Agent Workflow

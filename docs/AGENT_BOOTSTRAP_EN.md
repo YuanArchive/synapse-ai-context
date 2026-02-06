@@ -19,7 +19,7 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 synapse init
 ```
 - Creates `.synapse/`, `.context/`, `.agent/` directories
-- Auto-generates `rules.md`
+- Auto-generates `AI_RULES_KO.md`, `AI_RULES_EN.md`
 
 ### Step 2: Full Index
 ```bash

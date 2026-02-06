@@ -30,14 +30,14 @@ def wrap_artifact(content: str, name: str) -> str:
 def init(
     path: str = typer.Option(".", help="Target project path"),
     agent: bool = typer.Option(
-        False,
+        True,
         "--agent",
-        help="Initialize with generic Agent-optimized context structure",
+        help="Initialize with generic Agent-optimized context structure (Default: True)",
     ),
 ):
     """
     Initialize Synapse in the target directory.
-    Creates .synapse, .context, .agent/rules.md, and docs/.
+    Creates .synapse, .context, and .agent/ (with KO/EN rules).
     """
     import shutil
     
@@ -63,61 +63,36 @@ def init(
         context_dir.mkdir(exist_ok=True)
         console.print("- [x] Created `.context` directory")
 
-    # 3. Create .agent/rules.md
+    # 3. Create .agent directory and copy rules
     if agent or not agent_dir.exists():
-        if not agent_dir.exists():
-            agent_dir.mkdir(exist_ok=True)
+        exist_ok_flag = agent_dir.exists()
+        agent_dir.mkdir(exist_ok=True)
+        if not exist_ok_flag:
             console.print("- [x] Created `.agent` directory")
 
-        rules_file = agent_dir / "rules.md"
-        rules_content = """# ⚡️ Synapse Protocol: MANDATORY OPERATING PROCEDURES
+        # Copy rule files from package docs
+        try:
+            import synapse
+            synapse_pkg_dir = Path(synapse.__file__).parent.parent.parent
+            source_docs = synapse_pkg_dir / "docs"
 
-You are operating within a **Synapse-Augmented Codebase**.
-This environment is protected by strict protocols to ensure code integrity and context awareness.
-
-## 🛑 PRIME DIRECTIVES (NON-NEGOTIABLE)
-
-### 1. 🔍 Search Before You Strike (Context Acquisition)
-**NEVER** modify or answer questions about code without first locating it.
-- **Action**: Run `synapse search <query>` to find relevant files and definitions.
-- **Why**: Guessing file paths or contents leads to hallucinations and broken builds.
-
-### 2. 🕸️ Check the Graph (Impact Analysis)
-Before refactoring or changing shared components:
-- **Action**: Run `synapse graph <file_path>` to see dependencies and dependents.
-- **Why**: You must understand what breaks if you change this function. A change in A might break B.
-
-### 3. 🧠 Deep Think on Failure (Self-Correction)
-If a build fails or an error occurs:
-- **Action**: DO NOT blind-fix. Run `synapse ask "<error message>" --think`.
-- **Why**: "Try harder" is not a strategy. Reasoning via CoT (Chain of Thought) is required to solve complex bugs.
-
-## 🔧 Error Handling Protocol
-에러 발생 시:
-1. `synapse analyze . --verbose` 로 상세 로그 수집
-2. `.synapse/synapse_*.log` 로그 파일 확인
-3. `synapse ask "<에러>" --think` 로 분석
-
-## 🛠️ Tool Usage Guide
-
-| Goal | Command |
-| :--- | :--- |
-| **Start/Re-index** | `synapse analyze` |
-| **Full Re-index** | `synapse analyze --full` |
-| **Verbose Debug** | `synapse analyze --verbose` |
-| **Find Code** | `synapse search "<query>"` |
-| **Check Impact** | `synapse graph <file_path>` |
-| **Debug/Reason** | `synapse ask "<question>" --think` |
-| **Start Watcher** | `synapse watch start --daemon` |
-
----
-**By proceeding, you agree to follow these protocols strictly.**
-"""
-        if rules_file.exists() and not agent:
-            console.print("- [ ] `.agent/rules.md` already exists")
-        else:
-            rules_file.write_text(rules_content, encoding="utf-8")
-            console.print("- [x] Created/Updated `.agent/rules.md`")
+            rules_to_copy = ["AI_RULES_KO.md", "AI_RULES_EN.md"]
+            
+            for rule_file in rules_to_copy:
+                src = source_docs / rule_file
+                dst = agent_dir / rule_file
+                
+                if src.exists():
+                    if not dst.exists():
+                        shutil.copy2(src, dst)
+                        console.print(f"- [x] Installed `.agent/{rule_file}`")
+                    else:
+                        console.print(f"- [ ] `.agent/{rule_file}` already exists")
+                else:
+                    console.print(f"- [yellow]Warning: Source rule {rule_file} not found[/yellow]")
+                    
+        except Exception as e:
+            console.print(f"- [red]Error copying rules: {e}[/red]")
 
     # 4. Create docs/ and copy manuals
     if not docs_dir.exists():

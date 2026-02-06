@@ -56,7 +56,8 @@ synapse init
 │   └── INTELLIGENCE.md
 ├── .context/              # 컨텍스트 저장소
 └── .agent/          # AI 에이전트 규칙
-    └── rules.md
+    ├── AI_RULES_KO.md
+    └── AI_RULES_EN.md
 ```
 
 ---
@@ -164,7 +165,7 @@ synapse watch stop
 
 ### 규칙 파일 위치
 ```
-프로젝트/.agent/rules.md
+프로젝트/.agent/AI_RULES_KO.md (또는 _EN.md)
 ```
 
 ### AI 에이전트 워크플로우
