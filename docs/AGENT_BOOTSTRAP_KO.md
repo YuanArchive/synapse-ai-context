@@ -59,7 +59,7 @@ synapse watch start --daemon
 
 | 문제 | 해결 |
 |------|------|
-| synapse 명령어 없음 | `pip install git+https://github.com/YOUR_USERNAME/synapse.git` |
+| synapse 명령어 없음 | `pip install git+https://github.com/YuanArchive/synapse-ai-context.git` |
 | ChromaDB 오류 | `rm -rf .synapse/db && synapse analyze . --full` |
 | Watcher 실패 | `synapse watch stop && synapse watch start --daemon` |
 

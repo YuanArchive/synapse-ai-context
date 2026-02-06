@@ -59,7 +59,7 @@ After running the commands above, verify:
 
 | Issue | Solution |
 |-------|----------|
-| synapse command not found | `pip install git+https://github.com/YOUR_USERNAME/synapse.git` |
+| synapse command not found | `pip install git+https://github.com/YuanArchive/synapse-ai-context.git` |
 | ChromaDB error | `rm -rf .synapse/db && synapse analyze . --full` |
 | Watcher failure | `synapse watch stop && synapse watch start --daemon` |
 

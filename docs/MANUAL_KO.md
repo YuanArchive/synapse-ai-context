@@ -23,12 +23,12 @@
 
 ### 방법 A: pip 설치 (권장)
 ```bash
-pip install -e F:\Dev_Workspace\10_Synapse
+pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ```
 
 ### 방법 B: 직접 실행
 ```bash
-cd F:\Dev_Workspace\10_Synapse
+cd 내_프로젝트_경로
 python -m synapse.cli <명령어>
 ```
 

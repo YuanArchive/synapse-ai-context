@@ -23,13 +23,13 @@
 
 ### Method A: pip install (Recommended)
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/synapse.git
+pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ```
 
 ### Method B: Development mode
 ```bash
-git clone https://github.com/YOUR_USERNAME/synapse.git
-pip install -e ./synapse
+git clone https://github.com/YuanArchive/synapse-ai-context.git
+pip install -e ./synapse-ai-context
 ```
 
 ### Requirements
