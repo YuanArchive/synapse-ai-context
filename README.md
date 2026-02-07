@@ -305,6 +305,19 @@ synapse/
 ## 🔧 Troubleshooting
 
 <details>
+<summary><b>Fatal error in launcher (Windows)</b></summary>
+
+This error occurs when the `pip` executable is tied to an old or non-existent Python path.
+
+**Solution:**
+Use `python -m pip` instead of `pip`:
+```bash
+python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+```
+
+</details>
+
+<details>
 <summary><b>ChromaDB Error</b></summary>
 
 ```bash

@@ -257,6 +257,10 @@ synapse ask "<error message>" --think
 
 ## 10. Troubleshooting
 
+### Fatal error in launcher (Windows)
+- Use `python -m pip` instead of `pip`.
+- Example: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
 ### ChromaDB Error
 ```bash
 rm -rf .synapse/db

@@ -254,6 +254,10 @@ synapse ask "<에러 메시지>" --think
 
 ## 10. 문제 해결
 
+### Fatal error in launcher (Windows)
+- `pip` 대신 `python -m pip`를 사용하여 설치하세요.
+- 예: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
 ### ChromaDB 오류
 ```bash
 rm -rf .synapse/db

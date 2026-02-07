@@ -305,6 +305,19 @@ synapse/
 ## 🔧 문제 해결
 
 <details>
+<summary><b>Fatal error in launcher (Windows)</b></summary>
+
+이 오류는 `pip` 실행 파일이 이전 Python 설치 경로를 참조하고 있을 때 발생합니다.
+
+**해결 방법:**
+`pip` 대신 `python -m pip`를 사용하세요:
+```bash
+python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+```
+
+</details>
+
+<details>
 <summary><b>ChromaDB 오류</b></summary>
 
 ```bash
