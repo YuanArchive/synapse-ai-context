@@ -33,8 +33,20 @@ pip install -e ./synapse-ai-context
 ```
 
 ### Requirements
-- Python 3.12+
-- Dependencies auto-installed: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
+- **Python 3.12+** (Recommended: 3.12.x)
+- **C/C++ Compiler**: May be required for `tree-sitter` compilation.
+- **Virtual Environment**: Highly recommended to avoid dependency conflicts.
+
+### Installation & Verification
+1. Create and activate a virtual environment (`venv`).
+2. Install the package:
+   ```bash
+   pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+   ```
+3. Verify installation:
+   ```bash
+   synapse --help
+   ```
 
 ---
 

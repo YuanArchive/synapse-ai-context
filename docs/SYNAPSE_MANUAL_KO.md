@@ -32,9 +32,21 @@ cd 내_프로젝트_경로
 python -m synapse.cli <명령어>
 ```
 
-### 필수 의존성
-- Python 3.12+
-- watchdog, chromadb, networkx, tree-sitter 등 (자동 설치됨)
+### 필수 요구 사항
+- **Python 3.12+** (권장: 3.12.x)
+- **C/C++ 컴파일러**: `tree-sitter` 빌드를 위해 필요할 수 있습니다.
+- **가상환경 권장**: 의존성 충돌 방지를 위해 `venv` 사용을 권장합니다.
+
+### 설치 및 확인
+1. 가상환경 생성 및 활성화
+2. 패키지 설치:
+   ```bash
+   pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+   ```
+3. 설치 확인:
+   ```bash
+   synapse --help
+   ```
 
 ---
 

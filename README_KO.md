@@ -143,12 +143,38 @@ pip install -e .
 ```
 
 ### 요구사항
-- **Python 3.12+**
+- **Python 3.12+** (권장: 3.12.x)
+- **C/C++ 컴파일러**: 일부 시스템에서 `tree-sitter` 컴파일을 위해 필요할 수 있습니다.
 - 의존성 자동 설치: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
+
+### 🛡️ 권장 사항: 가상환경 사용
+
+다른 프로젝트와의 의존성 충돌을 방지하기 위해 가상환경 사용을 강력히 권장합니다.
+
+#### Windows
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+```
+
+#### macOS / Linux
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install git+https://github.com/YuanArchive/synapse-ai-context.git
+```
 
 ---
 
 ## 🚀 빠른 시작
+
+### 0️⃣ 설치 확인
+설치 완료 후, Synapse가 정상적으로 설치되었는지 확인합니다:
+```bash
+synapse --help
+```
+명령어 목록이 나타나면 준비가 완료된 것입니다!
 
 ### 1️⃣ 초기화
 ```bash
