@@ -7,7 +7,7 @@
 ## 🎯 Quick Command (One-Line Setup)
 
 ```bash
-synapse init && synapse analyze . --full && synapse watch start --daemon
+python -m synapse init && python -m synapse analyze . --full && python -m synapse watch start --daemon
 ```
 
 ---
@@ -16,21 +16,21 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 
 ### Step 1: Initialize Synapse
 ```bash
-synapse init
+python -m synapse init
 ```
 - Creates `.synapse/`, `.context/`, `.agent/` directories
 - Auto-generates `AI_RULES_KO.md`, `AI_RULES_EN.md`
 
 ### Step 2: Full Index
 ```bash
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 - Parses all code files
 - Builds vector index + dependency graph
 
 ### Step 3: Start Watcher (Optional)
 ```bash
-synapse watch start --daemon
+python -m synapse watch start --daemon
 ```
 - Background file monitoring
 - Auto incremental indexing
@@ -51,7 +51,7 @@ After running the commands above, verify:
 
 - [ ] `.synapse/` directory exists
 - [ ] `.synapse/dependency_graph.gml` created
-- [ ] `synapse watch status` → Running (optional)
+- [ ] `python -m synapse watch status` → Running (optional)
 
 ---
 
@@ -60,17 +60,17 @@ After running the commands above, verify:
 | Issue | Solution |
 |-------|----------|
 | synapse command not found | `pip install git+https://github.com/YuanArchive/synapse-ai-context.git` |
-| ChromaDB error | `rm -rf .synapse/db && synapse analyze . --full` |
-| Watcher failure | `synapse watch stop && synapse watch start --daemon` |
+| ChromaDB error | `rm -rf .synapse/db && python -m synapse analyze . --full` |
+| Watcher failure | `python -m synapse watch stop && python -m synapse watch start --daemon` |
 
 ---
 
 ## 📖 After Setup
 
 After setup complete, AI follows these rules:
-1. Run `synapse search <query>` before modifying code
-2. Run `synapse graph <file>` before refactoring
-3. Run `synapse ask "<error>" --think` on errors
+1. Run `python -m synapse search <query>` before modifying code
+2. Run `python -m synapse graph <file>` before refactoring
+3. Run `python -m synapse ask "<error>" --think` on errors
 
 **Detailed Rules**: See `.agent/rules.md`
 

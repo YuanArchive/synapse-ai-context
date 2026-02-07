@@ -33,7 +33,8 @@ python -m synapse.cli <명령어>
 ```
 
 ### 필수 요구 사항
-- **Python 3.12+** (권장: 3.12.x)
+- **Python 3.12** (강력 권장)
+  - *주의: Python 3.14+ 버전은 라이브러리 호환성 문제로 실행이 불가할 수 있습니다.*
 - **C/C++ 컴파일러**: `tree-sitter` 빌드를 위해 필요할 수 있습니다.
 - **가상환경 권장**: 의존성 충돌 방지를 위해 `venv` 사용을 권장합니다.
 
@@ -45,7 +46,7 @@ python -m synapse.cli <명령어>
    ```
 3. 설치 확인:
    ```bash
-   synapse --help
+   python -m synapse --help
    ```
 
 ---
@@ -54,7 +55,7 @@ python -m synapse.cli <명령어>
 
 ```bash
 cd 내_프로젝트_경로
-synapse init
+python -m synapse init
 ```
 
 **생성되는 구조:**
@@ -78,19 +79,19 @@ synapse init
 
 ### 증분 분석 (기본, 빠름)
 ```bash
-synapse analyze .
+python -m synapse analyze .
 ```
 - 변경된 파일만 재인덱싱
 - MD5 해시 기반 변경 감지
 
 ### 전체 재분석
 ```bash
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 
 ### 상세 로그 모드 (디버깅)
 ```bash
-synapse analyze . --verbose
+python -m synapse analyze . --verbose
 ```
 - 에러 발생 시 상세 정보 출력
 - 로그 파일 `.synapse/synapse_YYYYMMDD.log` 저장
@@ -110,17 +111,17 @@ INFO: Analysis complete: 3 files processed
 
 ### 시맨틱 검색
 ```bash
-synapse search "로그인 처리"
+python -m synapse search "로그인 처리"
 ```
 
 ### Hybrid Search (Vector + Graph)
 ```bash
-synapse search "로그인 처리" --hybrid
+python -m synapse search "로그인 처리" --hybrid
 ```
 
 ### 결과 압축
 ```bash
-synapse search "쿼리" --compress
+python -m synapse search "쿼리" --compress
 ```
 
 ---
@@ -128,7 +129,7 @@ synapse search "쿼리" --compress
 ## 5. 의존성 그래프
 
 ```bash
-synapse graph src/services/auth.py
+python -m synapse graph src/services/auth.py
 ```
 
 **출력:**
@@ -146,23 +147,23 @@ synapse graph src/services/auth.py
 
 ### 포그라운드 실행
 ```bash
-synapse watch start
+python -m synapse watch start
 # Ctrl+C로 종료
 ```
 
 ### 백그라운드 데몬
 ```bash
-synapse watch start --daemon
+python -m synapse watch start --daemon
 ```
 
 ### 상태 확인
 ```bash
-synapse watch status
+python -m synapse watch status
 ```
 
 ### 중지
 ```bash
-synapse watch stop
+python -m synapse watch stop
 ```
 
 ### 동작 원리
@@ -184,19 +185,19 @@ synapse watch stop
 
 #### 작업 시작 전
 ```bash
-synapse analyze .                  # 인덱스 갱신
-synapse watch start --daemon       # 또는 Watcher 실행
+python -m synapse analyze .                  # 인덱스 갱신
+python -m synapse watch start --daemon       # 또는 Watcher 실행
 ```
 
 #### 코드 수정 전
 ```bash
-synapse search "수정하려는 기능"   # 코드 검색
-synapse graph 대상파일.py         # 영향도 분석
+python -m synapse search "수정하려는 기능"   # 코드 검색
+python -m synapse graph 대상파일.py         # 영향도 분석
 ```
 
 #### 에러 발생 시
 ```bash
-synapse ask "에러 메시지" --think  # CoT 추론
+python -m synapse ask "에러 메시지" --think  # CoT 추론
 ```
 
 ---
@@ -207,7 +208,7 @@ AI가 에러 발생 시 자동으로 수행하는 단계:
 
 ### Step 1: 상세 로그 수집
 ```bash
-synapse analyze . --verbose
+python -m synapse analyze . --verbose
 ```
 
 ### Step 2: 로그 파일 확인
@@ -217,7 +218,7 @@ cat .synapse/synapse_*.log | tail -50
 
 ### Step 3: 에러 분석
 ```bash
-synapse ask "<에러 메시지>" --think
+python -m synapse ask "<에러 메시지>" --think
 ```
 
 ### Step 4: 에러 유형별 대응
@@ -235,20 +236,20 @@ synapse ask "<에러 메시지>" --think
 
 | 명령어 | 설명 |
 |--------|------|
-| `synapse init` | 프로젝트 초기화 |
-| `synapse analyze .` | 증분 분석 |
-| `synapse analyze . --full` | 전체 재분석 |
-| `synapse analyze . --verbose` | 상세 로그 |
-| `synapse search "쿼리"` | 시맨틱 검색 |
-| `synapse search "쿼리" --hybrid` | Hybrid Search |
-| `synapse graph <파일>` | 의존성 확인 |
-| `synapse ask "질문" --think` | 추론 모드 |
-| `synapse context <파일>` | 계층적 컨텍스트 |
-| `synapse skeleton <파일>` | 코드 스켈레톤화 |
-| `synapse watch start` | Watcher 시작 |
-| `synapse watch start --daemon` | 백그라운드 시작 |
-| `synapse watch status` | 상태 확인 |
-| `synapse watch stop` | Watcher 중지 |
+| `python -m synapse init` | 프로젝트 초기화 |
+| `python -m synapse analyze .` | 증분 분석 |
+| `python -m synapse analyze . --full` | 전체 재분석 |
+| `python -m synapse analyze . --verbose` | 상세 로그 |
+| `python -m synapse search "쿼리"` | 시맨틱 검색 |
+| `python -m synapse search "쿼리" --hybrid` | Hybrid Search |
+| `python -m synapse graph <파일>` | 의존성 확인 |
+| `python -m synapse ask "질문" --think` | 추론 모드 |
+| `python -m synapse context <파일>` | 계층적 컨텍스트 |
+| `python -m synapse skeleton <파일>` | 코드 스켈레톤화 |
+| `python -m synapse watch start` | Watcher 시작 |
+| `python -m synapse watch start --daemon` | 백그라운드 시작 |
+| `python -m synapse watch status` | 상태 확인 |
+| `python -m synapse watch stop` | Watcher 중지 |
 
 ---
 
@@ -261,20 +262,20 @@ synapse ask "<에러 메시지>" --think
 ### ChromaDB 오류
 ```bash
 rm -rf .synapse/db
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 
 ### Watcher 응답 없음
 ```bash
-synapse watch stop
-synapse watch start --daemon
+python -m synapse watch stop
+python -m synapse watch start --daemon
 ```
 
 ### 인덱스 초기화
 ```bash
 rm -rf .synapse
-synapse init
-synapse analyze . --full
+python -m synapse init
+python -m synapse analyze . --full
 ```
 
 ### 파일 인코딩 오류

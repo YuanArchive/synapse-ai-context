@@ -7,7 +7,7 @@
 ## 🎯 원라인 세팅
 
 ```bash
-synapse init && synapse analyze . --full && synapse watch start --daemon
+python -m synapse init && python -m synapse analyze . --full && python -m synapse watch start --daemon
 ```
 
 ---
@@ -16,21 +16,21 @@ synapse init && synapse analyze . --full && synapse watch start --daemon
 
 ### Step 1: Synapse 초기화
 ```bash
-synapse init
+python -m synapse init
 ```
 - `.synapse/`, `.context/`, `.agent/` 디렉토리 생성
 - `AI_RULES_KO.md`, `AI_RULES_EN.md` 자동 생성
 
 ### Step 2: 전체 인덱싱
 ```bash
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 - 모든 코드 파일 파싱
 - 벡터 인덱스 + 의존성 그래프 생성
 
 ### Step 3: Watcher 시작 (선택)
 ```bash
-synapse watch start --daemon
+python -m synapse watch start --daemon
 ```
 - 백그라운드 파일 감시
 - 자동 증분 인덱싱
@@ -51,7 +51,7 @@ synapse watch start --daemon
 
 - [ ] `.synapse/` 디렉토리 존재
 - [ ] `.synapse/dependency_graph.gml` 생성됨
-- [ ] `synapse watch status` → Running (선택)
+- [ ] `python -m synapse watch status` → Running (선택)
 
 ---
 
@@ -60,17 +60,17 @@ synapse watch start --daemon
 | 문제 | 해결 |
 |------|------|
 | synapse 명령어 없음 | `pip install git+https://github.com/YuanArchive/synapse-ai-context.git` |
-| ChromaDB 오류 | `rm -rf .synapse/db && synapse analyze . --full` |
-| Watcher 실패 | `synapse watch stop && synapse watch start --daemon` |
+| ChromaDB 오류 | `rm -rf .synapse/db && python -m synapse analyze . --full` |
+| Watcher 실패 | `python -m synapse watch stop && python -m synapse watch start --daemon` |
 
 ---
 
 ## 📖 세팅 후
 
 세팅 완료 후 AI는 다음 규칙을 따릅니다:
-1. 코드 수정 전 `synapse search <query>` 실행
-2. 리팩토링 전 `synapse graph <file>` 확인
-3. 에러 발생 시 `synapse ask "<error>" --think` 실행
+1. 코드 수정 전 `python -m synapse search <query>` 실행
+2. 리팩토링 전 `python -m synapse graph <file>` 확인
+3. 에러 발생 시 `python -m synapse ask "<error>" --think` 실행
 
 **규칙 상세**: `.agent/rules.md` 참조
 

@@ -147,6 +147,9 @@ pip install -e .
 - **C/C++ Compiler**: Required for `tree-sitter` compilation on some systems.
 - Dependencies auto-installed: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
 
+> [!TIP]
+> **Windows Users**: If the `synapse` command fails with a `Fatal error in launcher`, run all commands using **`python -m synapse`** instead. (e.g., `python -m synapse init`)
+
 ### 🛡️ Recommended: Using Virtual Environment
 
 To avoid dependency conflicts with other projects, it is highly recommended to use a virtual environment.
@@ -172,37 +175,37 @@ pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ### 0️⃣ Verify Installation
 After installation, check if Synapse is correctly installed:
 ```bash
-synapse --help
+python -m synapse --help
 ```
 If you see the command list, you are good to go!
 
 ### 1️⃣ Initialize
 ```bash
 cd your-project
-synapse init
+python -m synapse init
 ```
 
 ### 2️⃣ Analyze
 ```bash
-synapse analyze .           # Incremental (fast)
-synapse analyze . --full    # Full reindex
-synapse analyze . --verbose # Debug mode
+python -m synapse analyze .           # Incremental (fast)
+python -m synapse analyze . --full    # Full reindex
+python -m synapse analyze . --verbose # Debug mode
 ```
 
 ### 3️⃣ Search
 ```bash
-synapse search "login handler"
-synapse search "auth" --hybrid  # Vector + Graph
+python -m synapse search "login handler"
+python -m synapse search "auth" --hybrid  # Vector + Graph
 ```
 
 ### 4️⃣ Check Dependencies
 ```bash
-synapse graph src/auth.py
+python -m synapse graph src/auth.py
 ```
 
 ### 5️⃣ Start Watcher (Optional)
 ```bash
-synapse watch start --daemon
+python -m synapse watch start --daemon
 ```
 
 <details>
@@ -243,9 +246,9 @@ The AI will automatically run all setup commands!
 
 | Rule | Command |
 |------|---------|
-| 🔍 **Search Before Strike** | `synapse search <query>` before modifying |
-| 🕸️ **Check the Graph** | `synapse graph <file>` before refactoring |
-| 🧠 **Deep Think on Failure** | `synapse ask "<error>" --think` when stuck |
+| 🔍 **Search Before Strike** | `python -m synapse search <query>` before modifying |
+| 🕸️ **Check the Graph** | `python -m synapse graph <file>` before refactoring |
+| 🧠 **Deep Think on Failure** | `python -m synapse ask "<error>" --think` when stuck |
 
 ### Global Rules Setup
 
@@ -263,20 +266,20 @@ cp AI_RULES_EN.md your-project/.cursorrules
 
 | Command | Description |
 |---------|-------------|
-| `synapse init` | Initialize Synapse in a project |
-| `synapse analyze .` | Incremental analysis |
-| `synapse analyze . --full` | Full reindex |
-| `synapse analyze . --verbose` | Debug logging |
-| `synapse search "<query>"` | Semantic search |
-| `synapse search "<query>" --hybrid` | Vector + Graph search |
-| `synapse graph <file>` | Show dependencies |
-| `synapse ask "<question>" --think` | Deep reasoning |
-| `synapse context <file>` | Hierarchical context |
-| `synapse skeleton <file>` | Code skeletonization |
-| `synapse watch start` | Start file watcher |
-| `synapse watch start --daemon` | Background watcher |
-| `synapse watch status` | Check watcher status |
-| `synapse watch stop` | Stop watcher |
+| `python -m synapse init` | Initialize Synapse in a project |
+| `python -m synapse analyze .` | Incremental analysis |
+| `python -m synapse analyze . --full` | Full reindex |
+| `python -m synapse analyze . --verbose` | Debug logging |
+| `python -m synapse search "<query>"` | Semantic search |
+| `python -m synapse search "<query>" --hybrid` | Vector + Graph search |
+| `python -m synapse graph <file>` | Show dependencies |
+| `python -m synapse ask "<question>" --think` | Deep reasoning |
+| `python -m synapse context <file>` | Hierarchical context |
+| `python -m synapse skeleton <file>` | Code skeletonization |
+| `python -m synapse watch start` | Start file watcher |
+| `python -m synapse watch start --daemon` | Background watcher |
+| `python -m synapse watch status` | Check watcher status |
+| `python -m synapse watch stop` | Stop watcher |
 
 ---
 
@@ -305,6 +308,19 @@ synapse/
 ## 🔧 Troubleshooting
 
 <details>
+<summary><b>Python 3.14+ Compatibility Error (ConfigError)</b></summary>
+
+This occurs because Pydantic v1 (a dependency of ChromaDB) is not compatible with Python 3.14.
+
+**Solution:**
+We strongly recommend using **Python 3.12**.
+1. Install Python 3.12.
+2. Create venv: `py -3.12 -m venv .venv`
+3. Reinstall: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
+</details>
+
+<details>
 <summary><b>Fatal error in launcher (Windows)</b></summary>
 
 This error occurs when the `pip` executable is tied to an old or non-existent Python path.
@@ -322,7 +338,7 @@ python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 
 ```bash
 rm -rf .synapse/db
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 
 </details>
@@ -331,8 +347,8 @@ synapse analyze . --full
 <summary><b>Watcher Not Responding</b></summary>
 
 ```bash
-synapse watch stop
-synapse watch start --daemon
+python -m synapse watch stop
+python -m synapse watch start --daemon
 ```
 
 </details>
@@ -342,8 +358,8 @@ synapse watch start --daemon
 
 ```bash
 rm -rf .synapse
-synapse init
-synapse analyze . --full
+python -m synapse init
+python -m synapse analyze . --full
 ```
 
 </details>

@@ -6,17 +6,17 @@
 
 ### 1. 🔍 Search Before You Strike (Context Acquisition)
 **절대** 코드를 직접 확인하기 전에는 수정하거나 답변하지 않는다.
-- **Action**: `synapse search <query>`를 실행하여 관련 파일과 정의를 먼저 찾는다.
+- **Action**: `python -m synapse search <query>`를 실행하여 관련 파일과 정의를 먼저 찾는다.
 - **Why**: 파일 경로와 내용을 추측하는 것은 환각(Hallucination)과 빌드 오류의 원인이 된다.
 
 ### 2. 🕸️ Check the Graph (Impact Analysis)
 공유 컴포넌트를 수정하거나 리팩토링하기 전:
-- **Action**: `synapse graph <file_path>`를 실행하여 의존성(Dependencies)과 피의존성(Dependents)을 확인한다.
+- **Action**: `python -m synapse graph <file_path>`를 실행하여 의존성(Dependencies)과 피의존성(Dependents)을 확인한다.
 - **Why**: 함수 하나를 고쳤을 때 어디가 깨질지 완벽하게 이해해야 한다.
 
 ### 3. 🧠 Deep Think on Failure (Self-Correction)
 에러가 발생하거나 빌드가 실패했을 때:
-- **Action**: 무작정 고치지 말고 `synapse ask "<error message>" --think`를 실행한다.
+- **Action**: 무작정 고치지 말고 `python -m synapse ask "<error message>" --think`를 실행한다.
 - **Why**: 복잡한 버그는 단순히 다시 시도하는 것이 아니라, 논리적인 추론(CoT)이 필요하다.
 
 ---
@@ -29,24 +29,24 @@
 
 ## 🔍 2. 작업 전 필수 절차 (Pre-Work Protocol)
 작업을 시작하기 전, 반드시 다음 절차를 수행하여 맥락을 파악한다.
-1.  **인덱스 갱신**: `synapse analyze .`을 실행하여 최신 프로젝트 지도를 그린다.
+1.  **인덱스 갱신**: `python -m synapse analyze .`을 실행하여 최신 프로젝트 지도를 그린다.
     - 증분 업데이트가 기본이므로 변경된 파일만 빠르게 처리됨
 2.  **구조 파악**: `.synapse/INTELLIGENCE.md` 파일을 읽고 전체 아키텍처를 숙지한다.
 
 ## 👁️ 3. 실시간 감시 (Real-time Watcher)
 **장시간 개발 세션**에서는 File Watcher를 활용하여 항상 최신 인덱스를 유지한다.
-1.  **상태 확인**: `synapse watch status`로 Watcher 실행 여부 확인
+1.  **상태 확인**: `python -m synapse watch status`로 Watcher 실행 여부 확인
 2.  **필요 시 시작**: 
-    - 포그라운드: `synapse watch start` (Ctrl+C로 종료)
-    - 백그라운드: `synapse watch start --daemon` (별도 프로세스)
-3.  **중지**: `synapse watch stop`
+    - 포그라운드: `python -m synapse watch start` (Ctrl+C로 종료)
+    - 백그라운드: `python -m synapse watch start --daemon` (별도 프로세스)
+3.  **중지**: `python -m synapse watch stop`
 
 > Watcher가 실행 중이면 파일 변경 시 자동으로 증분 인덱싱이 수행되므로
 > AI가 항상 최신 코드베이스에 접근할 수 있다.
 
 ## 💾 4. 작업 후 마무리 (Post-Work Protocol)
 코드 수정이나 기능 추가 후에는 반드시 다음을 수행한다.
-1.  **인덱스 갱신**: Watcher가 실행 중이 아니면 `synapse analyze .`를 실행한다.
+1.  **인덱스 갱신**: Watcher가 실행 중이 아니면 `python -m synapse analyze .`를 실행한다.
 2.  **정리정돈**: 불필요한 임시 파일이나 디버그 로그는 즉시 삭제한다.
 
 ## 🛡️ 5. 안전 및 보안 (Safety & Security)
@@ -58,7 +58,7 @@
 
 ### Step 1: 상세 로그 수집
 ```bash
-synapse analyze . --verbose
+python -m synapse analyze . --verbose
 ```
 - `--verbose` 옵션으로 상세 디버그 정보 확인
 - 에러 발생 위치와 스택 트레이스 분석
@@ -72,7 +72,7 @@ cat .synapse/synapse_*.log | tail -50
 
 ### Step 3: 에러 메시지 분석
 ```bash
-synapse ask "<에러 메시지>" --think
+python -m synapse ask "<에러 메시지>" --think
 ```
 - Chain-of-Thought 추론으로 근본 원인 분석
 - 단순 재시도 금지, 논리적 해결책 도출
@@ -84,21 +84,21 @@ synapse ask "<에러 메시지>" --think
 | `IndexingError` | `.synapse/db` 삭제 후 `--full` 재인덱싱 |
 | `GraphError` | `dependency_graph.gml` 무결성 확인 |
 | `SearchError` | 쿼리 수정 또는 인덱스 재생성 |
-| `WatcherError` | `synapse watch stop` 후 재시작 |
+| `WatcherError` | `python -m synapse watch stop` 후 재시작 |
 
 ## 🛠️ Tool Quick Reference
 
 | Goal | Command |
 | :--- | :--- |
-| **Start/Re-index** | `synapse analyze` |
-| **Full Re-index** | `synapse analyze --full` |
-| **Verbose Debug** | `synapse analyze --verbose` |
-| **Find Code** | `synapse search "<query>"` |
-| **Check Impact** | `synapse graph <file_path>` |
-| **Debug/Reason** | `synapse ask "<question>" --think` |
-| **Start Watcher** | `synapse watch start` (or `--daemon`) |
-| **Watcher Status** | `synapse watch status` |
-| **Stop Watcher** | `synapse watch stop` |
+| **Start/Re-index** | `python -m synapse analyze` |
+| **Full Re-index** | `python -m synapse analyze --full` |
+| **Verbose Debug** | `python -m synapse analyze --verbose` |
+| **Find Code** | `python -m synapse search "<query>"` |
+| **Check Impact** | `python -m synapse graph <file_path>` |
+| **Debug/Reason** | `python -m synapse ask "<question>" --think` |
+| **Start Watcher** | `python -m synapse watch start` (or `--daemon`) |
+| **Watcher Status** | `python -m synapse watch status` |
+| **Stop Watcher** | `python -m synapse watch stop` |
 
 ---
 **이 프로젝트에서 활동하는 모든 AI는 위 프로토콜을 엄격히 준수할 것을 약속한다.**

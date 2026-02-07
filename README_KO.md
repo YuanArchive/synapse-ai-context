@@ -147,6 +147,9 @@ pip install -e .
 - **C/C++ 컴파일러**: 일부 시스템에서 `tree-sitter` 컴파일을 위해 필요할 수 있습니다.
 - 의존성 자동 설치: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
 
+> [!TIP]
+> **Windows 사용자 주의**: `synapse` 명령어가 `Fatal error in launcher` 오류와 함께 실행되지 않는다면, 모든 명령어 앞에 **`python -m`**을 붙여서 실행하세요. (예: `python -m synapse init`)
+
 ### 🛡️ 권장 사항: 가상환경 사용
 
 다른 프로젝트와의 의존성 충돌을 방지하기 위해 가상환경 사용을 강력히 권장합니다.
@@ -172,37 +175,37 @@ pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ### 0️⃣ 설치 확인
 설치 완료 후, Synapse가 정상적으로 설치되었는지 확인합니다:
 ```bash
-synapse --help
+python -m synapse --help
 ```
 명령어 목록이 나타나면 준비가 완료된 것입니다!
 
 ### 1️⃣ 초기화
 ```bash
 cd your-project
-synapse init
+python -m synapse init
 ```
 
 ### 2️⃣ 분석
 ```bash
-synapse analyze .           # 증분 분석 (빠름)
-synapse analyze . --full    # 전체 재인덱싱
-synapse analyze . --verbose # 디버그 모드
+python -m synapse analyze .           # 증분 분석 (빠름)
+python -m synapse analyze . --full    # 전체 재인덱싱
+python -m synapse analyze . --verbose # 디버그 모드
 ```
 
 ### 3️⃣ 검색
 ```bash
-synapse search "로그인 핸들러"
-synapse search "auth" --hybrid  # 벡터 + 그래프
+python -m synapse search "로그인 핸들러"
+python -m synapse search "auth" --hybrid  # 벡터 + 그래프
 ```
 
 ### 4️⃣ 의존성 확인
 ```bash
-synapse graph src/auth.py
+python -m synapse graph src/auth.py
 ```
 
 ### 5️⃣ 감시 시작 (선택)
 ```bash
-synapse watch start --daemon
+python -m synapse watch start --daemon
 ```
 
 <details>
@@ -243,9 +246,9 @@ AI가 자동으로 모든 설정 명령어를 실행합니다!
 
 | 규칙 | 명령어 |
 |------|--------|
-| 🔍 **Search Before Strike** | 수정 전 `synapse search <query>` |
-| 🕸️ **Check the Graph** | 리팩토링 전 `synapse graph <file>` |
-| 🧠 **Deep Think on Failure** | 막힐 때 `synapse ask "<error>" --think` |
+| 🔍 **Search Before Strike** | 수정 전 `python -m synapse search <query>` |
+| 🕸️ **Check the Graph** | 리팩토링 전 `python -m synapse graph <file>` |
+| 🧠 **Deep Think on Failure** | 막힐 때 `python -m synapse ask "<error>" --think` |
 
 ### 전역 규칙 설정
 
@@ -263,20 +266,20 @@ cp AI_RULES_KO.md your-project/.cursorrules
 
 | 명령어 | 설명 |
 |--------|------|
-| `synapse init` | 프로젝트 초기화 |
-| `synapse analyze .` | 증분 분석 |
-| `synapse analyze . --full` | 전체 재인덱싱 |
-| `synapse analyze . --verbose` | 디버그 로깅 |
-| `synapse search "<쿼리>"` | 시맨틱 검색 |
-| `synapse search "<쿼리>" --hybrid` | 벡터 + 그래프 검색 |
-| `synapse graph <파일>` | 의존성 표시 |
-| `synapse ask "<질문>" --think` | 딥 추론 |
-| `synapse context <파일>` | 계층적 컨텍스트 |
-| `synapse skeleton <파일>` | 코드 스켈레톤화 |
-| `synapse watch start` | 파일 감시 시작 |
-| `synapse watch start --daemon` | 백그라운드 감시 |
-| `synapse watch status` | 감시 상태 확인 |
-| `synapse watch stop` | 감시 중지 |
+| `python -m synapse init` | 프로젝트 초기화 |
+| `python -m synapse analyze .` | 증분 분석 |
+| `python -m synapse analyze . --full` | 전체 재인덱싱 |
+| `python -m synapse analyze . --verbose` | 디버그 로깅 |
+| `python -m synapse search "<쿼리>"` | 시맨틱 검색 |
+| `python -m synapse search "<쿼리>" --hybrid` | 벡터 + 그래프 검색 |
+| `python -m synapse graph <파일>` | 의존성 표시 |
+| `python -m synapse ask "<질문>" --think` | 딥 추론 |
+| `python -m synapse context <파일>` | 계층적 컨텍스트 |
+| `python -m synapse skeleton <파일>` | 코드 스켈레톤화 |
+| `python -m synapse watch start` | 파일 감시 시작 |
+| `python -m synapse watch start --daemon` | 백그라운드 감시 |
+| `python -m synapse watch status` | 감시 상태 확인 |
+| `python -m synapse watch stop` | 감시 중지 |
 
 ---
 
@@ -305,6 +308,19 @@ synapse/
 ## 🔧 문제 해결
 
 <details>
+<summary><b>Python 3.14+ 호환성 오류 (ConfigError)</b></summary>
+
+ChromaDB 프로젝트가 의존하는 Pydantic v1이 Python 3.14와 호환되지 않아 발생합니다.
+
+**해결 방법:**
+현재로서는 **Python 3.12** 사용을 강력히 권장합니다.
+1. Python 3.12 설치
+2. 가상환경 생성: `py -3.12 -m venv .venv`
+3. 재설치: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
+</details>
+
+<details>
 <summary><b>Fatal error in launcher (Windows)</b></summary>
 
 이 오류는 `pip` 실행 파일이 이전 Python 설치 경로를 참조하고 있을 때 발생합니다.
@@ -322,7 +338,7 @@ python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 
 ```bash
 rm -rf .synapse/db
-synapse analyze . --full
+python -m synapse analyze . --full
 ```
 
 </details>
@@ -331,8 +347,8 @@ synapse analyze . --full
 <summary><b>감시 응답 없음</b></summary>
 
 ```bash
-synapse watch stop
-synapse watch start --daemon
+python -m synapse watch stop
+python -m synapse watch start --daemon
 ```
 
 </details>
@@ -342,8 +358,8 @@ synapse watch start --daemon
 
 ```bash
 rm -rf .synapse
-synapse init
-synapse analyze . --full
+python -m synapse init
+python -m synapse analyze . --full
 ```
 
 </details>

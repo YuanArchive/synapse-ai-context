@@ -1,6 +1,17 @@
+import sys
+from rich.console import Console
+
+# Python 3.14+ Compatibility Check (due to ChromaDB/Pydantic v1)
+if sys.version_info >= (3, 14):
+    console = Console()
+    console.print("[bold red]Error: Synapse is currently incompatible with Python 3.14+.[/bold red]")
+    console.print("[yellow]ChromaDB (and Pydantic v1) has known issues with Python 3.14.[/yellow]")
+    console.print("[bold cyan]Solution:[/bold cyan] Please use [bold]Python 3.12[/bold] (Recommended) or 3.13.")
+    console.print("[dim]Suggested: python -m venv .venv (using Python 3.12)[/dim]\n")
+    sys.exit(1)
+
 import typer
 import json
-from rich.console import Console
 from typing import List, Optional, Union
 from .analyzer import ProjectAnalyzer
 from .vector_store import VectorStore
@@ -209,8 +220,8 @@ def init(
         except Exception as e:
             console.print(f"- [yellow]Warning: Could not setup VS Code: {e}[/yellow]")
 
-    console.print("\n**Ready.** Run `synapse analyze` to start.")
-    console.print("> Tip: AI 세팅은 `@docs/AGENT_BOOTSTRAP.md`를 태그하세요.")
+    console.print("\n**Ready.** Run `python -m synapse analyze .` to start.")
+    console.print("> Tip: AI 세팅은 `@docs/AGENT_BOOTSTRAP_KO.md`를 태그하세요.")
 
 
 @app.command()
@@ -287,7 +298,7 @@ def analyze(
         # Auto-generate INTELLIGENCE.md in .synapse/
         _summarize_internal(path, output_dir=str(Path(path) / ".synapse"), quiet=False)
 
-        console.print("\n> Analysis complete. Ready for `synapse search`.")
+        console.print("\n> Analysis complete. Ready for `python -m synapse search`.")
         logger.info(f"Analysis complete: {summary.get('files_analyzed', summary.get('changed_files', 0))} files processed")
         
         _print_protocol_reminder()
@@ -328,7 +339,7 @@ def _summarize_internal(
     if not synapse_dir.exists():
         if not quiet:
             console.print(
-                f"[red]Error: .synapse directory not found. Run 'analyze' first.[/red]"
+                f"[red]Error: .synapse directory not found. Run 'python -m synapse analyze .' first.[/red]"
             )
         return
 
@@ -586,7 +597,7 @@ def ask(
     synapse_dir = Path(path).resolve() / ".synapse"
     if not synapse_dir.exists():
         console.print(
-            f"[red]Error: .synapse directory not found in {path}. Run 'analyze' first.[/red]"
+            f"[red]Error: .synapse directory not found in {path}. Run 'python -m synapse analyze .' first.[/red]"
         )
         return
 
@@ -674,7 +685,7 @@ def graph(
     synapse_dir = Path(path).resolve() / ".synapse"
     if not synapse_dir.exists():
         console.print(
-            "[red]Error: .synapse directory not found. Run 'analyze' first.[/red]"
+            "[red]Error: .synapse directory not found. Run 'python -m synapse analyze .' first.[/red]"
         )
         return
 
