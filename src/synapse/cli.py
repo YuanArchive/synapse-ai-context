@@ -408,7 +408,7 @@ def search(
     """
     synapse_dir = Path(path).resolve() / ".synapse"
     if not synapse_dir.exists():
-        msg = f".synapse directory not found in {path}. Run 'analyze' first."
+        msg = f".synapse directory not found in {path}. Run 'python -m synapse analyze .' first."
         if json_output:
             console.print(json.dumps({"error": msg}))
         else:
@@ -799,7 +799,7 @@ def context(
     """
     synapse_dir = Path(path).resolve() / ".synapse"
     if not synapse_dir.exists():
-        msg = f".synapse directory not found in {path}. Run 'analyze' first."
+        msg = f".synapse directory not found in {path}. Run 'python -m synapse analyze .' first."
         if json_output:
             console.print(json.dumps({"error": msg}))
         else:
