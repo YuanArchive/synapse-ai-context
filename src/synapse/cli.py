@@ -956,7 +956,7 @@ def watch_start(
     synapse_dir = project_path / ".synapse"
     
     if not synapse_dir.exists():
-        console.print("[yellow]Warning: .synapse 디렉토리가 없습니다. 먼저 'synapse analyze'를 실행하세요.[/yellow]")
+        console.print("[yellow]Warning: .synapse 디렉토리가 없습니다. 먼저 'python -m synapse analyze .'를 실행하세요.[/yellow]")
     
     # 이미 실행 중인지 확인
     status = SynapseWatcher.get_status(project_path)
@@ -992,8 +992,8 @@ def watch_start(
             )
         
         console.print(f"[green]✓ Watcher started in background for: {project_path}[/green]")
-        console.print("상태 확인: synapse watch status")
-        console.print("중지: synapse watch stop")
+        console.print("상태 확인: python -m synapse watch status")
+        console.print("중지: python -m synapse watch stop")
         return
     
     # 포그라운드 실행
@@ -1047,7 +1047,7 @@ def watch_status(
     else:
         console.print(f"- **Status:** ⚫ Stopped")
         console.print(f"- **Project:** `{project_path}`")
-        console.print("\n> 시작하려면: `synapse watch start`")
+        console.print("\n> 시작하려면: `python -m synapse watch start`")
 
 
 @watch_app.command("stop")
