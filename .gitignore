@@ -6,21 +6,19 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 *.egg-info/
 dist/
 build/
+*.so
 
-# Synapse runtime data (each project has its own)
+# Synapse runtime data (each project generates its own)
 .synapse/
-.context/
-.agent/
 *.log
-db/
 
 # IDE
 .vscode/
 .idea/
-.vortex/
 pyrightconfig.json
 
 # Local Environment
@@ -35,4 +33,10 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
-tests/
+
+# Temporary files
+test_*.py
+check_*.py
+test_reproduce_crash.py
+test_jina_load.py
+

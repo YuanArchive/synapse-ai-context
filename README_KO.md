@@ -142,11 +142,18 @@ cd synapse-ai-context
 pip install -e .
 ```
 
-### 요구사항
-- **Python 3.12+** (권장: 3.12.x)
+### 시스템 요구사항
+
+> [!IMPORTANT]
+> **Python 버전**: **3.10 ~ 3.13** (권장: **3.12.12**)
+> - ⚠️ **Python 3.14+는 현재 지원되지 않습니다** (ChromaDB 호환성 문제)
+> - 3.10, 3.11, 3.12, 3.13에서 테스트 완료
+> - GPU 가속 사용 시 CUDA 지원 PyTorch 필요 (선택사항)
+
+**필수 구성 요소**:
 - **C/C++ 컴파일러**: 일부 시스템에서 `tree-sitter` 컴파일을 위해 필요할 수 있습니다.
 - 의존성 자동 설치: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
-- **권장 사양:** RAM 8GB 이상 (쾌적한 사용을 위해 16GB 권장 - ChromaDB/ML 모델 구동용)
+- **권장 사양**: RAM 8GB 이상 (쾌적한 사용을 위해 16GB 권장 - ChromaDB/ML 모델 구동용)
 
 > [!TIP]
 > **Windows 사용자 주의**: `synapse` 명령어가 `Fatal error in launcher` 오류와 함께 실행되지 않는다면, 모든 명령어 앞에 **`python -m`**을 붙여서 실행하세요. (예: `python -m synapse init`)
