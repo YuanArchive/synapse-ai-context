@@ -130,9 +130,11 @@ We parse everything thrown at us. Powered by **Tree-sitter**.
 
 ## 📦 Installation
 
-### 🚀 Option 1: One-Click Auto Install (Recommended - Windows)
+### 🚀 Option 1: One-Click Auto Install (Recommended)
 
 **Install everything with a single click!**
+
+#### Windows
 
 1. Clone this repository:
    ```bash
@@ -142,12 +144,32 @@ We parse everything thrown at us. Powered by **Tree-sitter**.
 
 2. **Double-click `scripts\setup.bat`**
 
+#### macOS / Linux
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/YuanArchive/synapse-ai-context.git
+   cd synapse-ai-context
+   ```
+
+2. Run the install script:
+   ```bash
+   chmod +x scripts/setup.sh
+   ./scripts/setup.sh
+   ```
+
 **What's included:**
-- ✅ Python 3.12.12 automatic installation (if not present)
+- ✅ Python 3.12.12 automatic installation (Windows: Chocolatey, macOS: Homebrew)
 - ✅ Virtual environment auto-creation (`.venv`)
 - ✅ Synapse tool installation
 - ✅ VS Code automatic configuration
 - ✅ Direct `synapse` command usage
+
+**🍎 Apple Silicon (M1/M2) Bonus:**
+- ✅ **Metal acceleration auto-enabled**
+- ✅ **Unified memory optimization** (32GB recommended)
+- ✅ **Auto-adjusted batch size** (32~40)
+- ✅ **CUDA GPU-level performance**
 
 Use immediately after installation:
 ```bash
@@ -158,6 +180,9 @@ synapse analyze .
 
 > [!TIP]
 > Virtual environment activates automatically! Use `synapse` commands **without the `python -m` prefix**.
+
+> [!NOTE]
+> **macOS users**: See the [macOS Optimization Guide](docs/MACOS_OPTIMIZATION.md) for Metal acceleration tips.
 
 ---
 

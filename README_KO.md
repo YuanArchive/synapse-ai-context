@@ -130,9 +130,11 @@
 
 ## 📦 설치
 
-### 🚀 옵션 1: 원클릭 자동 설치 (권장 - Windows)
+### 🚀 옵션 1: 원클릭 자동 설치 (권장)
 
 **클릭 한 번으로 모든 것을 설치합니다!**
+
+#### Windows
 
 1. 이 저장소를 클론합니다:
    ```bash
@@ -142,12 +144,32 @@
 
 2. **`scripts\setup.bat`를 더블클릭하세요.**
 
+#### macOS / Linux
+
+1. 저장소 클론:
+   ```bash
+   git clone https://github.com/YuanArchive/synapse-ai-context.git
+   cd synapse-ai-context
+   ```
+
+2. 설치 스크립트 실행:
+   ```bash
+   chmod +x scripts/setup.sh
+   ./scripts/setup.sh
+   ```
+
 **포함 내용**:
-- ✅ Python 3.12.12 자동 설치 (없을 경우)
+- ✅ Python 3.12.12 자동 설치 (Windows: Chocolatey, macOS: Homebrew)
 - ✅ 가상환경 자동 생성 (`.venv`)
 - ✅ Synapse 툴 설치
 - ✅ VS Code 설정 자동 구성
 - ✅ `synapse` 명령어 직접 사용 가능
+
+**🍎 Apple Silicon (M1/M2) 추가 혜택:**
+- ✅ **Metal 가속 자동 활성화**
+- ✅ **통합 메모리 최적화** (32GB 권장)
+- ✅ **배치 크기 자동 조정** (32~40)
+- ✅ **CUDA GPU 수준의 성능**
 
 설치 후 바로 사용하세요:
 ```bash
@@ -158,6 +180,9 @@ synapse analyze .
 
 > [!TIP]
 > 가상환경이 자동으로 활성화됩니다! **`python -m` 접두사 없이** `synapse` 명령어를 바로 사용할 수 있습니다.
+
+> [!NOTE]
+> **macOS 사용자**: Metal 가속 활용법은 [macOS 최적화 가이드](docs/MACOS_OPTIMIZATION.md)를 참조하세요.
 
 ---
 

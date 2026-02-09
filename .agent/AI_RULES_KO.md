@@ -227,17 +227,76 @@ synapse init
 
 #### ⚠️ 폴백 사용
 ```bash
+```bash
 # VS Code 밖에서 실행하거나 가상환경 인식 실패 시
 python -m synapse analyze .
 ```
 
 ### 원클릭 설치 사용자 전용 기능
 
-원클릭 설치 (`scripts\setup.bat`) 사용자는:
-- ✅ VS Code 설정 자동 완료
-- ✅ 터미널 자동 가상환경 활성화
-- ✅ `synapse` 명령어 직접 사용 가능
-- ✅ Python 인터프리터 자동 선택
+원클릭 설치 사용자는:
+- **Windows** (`scripts\setup.bat`):
+  - ✅ VS Code 설정 자동 완료
+  - ✅ 터미널 자동 가상환경 활성화
+  - ✅ `synapse` 명령어 직접 사용 가능
+  - ✅ Python 인터프리터 자동 선택
+
+- **macOS/Linux** (`scripts/setup.sh`):
+  - ✅ VS Code 설정 자동 완료
+  - ✅ 터미널 자동 가상환경 활성화
+  - ✅ `synapse` 명령어 직접 사용 가능
+  - ✅ Python 인터프리터 자동 선택
+  - 🍎 **Apple Silicon: Metal 가속 자동 설정**
+
+---
+
+## 🍎 9. macOS Apple Silicon 최적화 (M1/M2 전용)
+
+### Metal 가속 확인
+
+**설치 후 자동으로 Metal이 활성화됩니다.** 확인 방법:
+
+```bash
+# 가상환경 활성화
+source .venv/bin/activate
+
+# Metal 백엔드 확인
+python -c "import torch; print(f'MPS: {torch.backends.mps.is_available()}')"
+```
+
+**예상 출력:** `MPS: True`
+
+### 최적 설정 (M1 Pro 32GB 기준)
+
+**통합 메모리를 최대한 활용:**
+
+```bash
+# 환경 변수 설정
+export SYNAPSE_BATCH_SIZE=32      # 통합 메모리 활용
+export SYNAPSE_DEVICE=mps          # Metal 백엔드
+export SYNAPSE_WORKERS=8           # 성능 코어 활용
+
+# 프로젝트 분석
+synapse analyze . --workers 8
+```
+
+### AI는 다음을 인지해야 함
+
+1. **성능 차이**
+   - Apple Silicon: Metal 가속으로 **CPU 대비 5~10배 빠름**
+   - Intel Mac: CPU 모드 (Metal 미지원)
+
+2. **배치 크기**
+   - M1/M2 32GB: 배치 크기 32~40 권장
+   - M1/M2 16GB: 배치 크기 16~20 권장
+
+3. **명령어 형식**
+   - macOS/Linux: `source .venv/bin/activate`
+   - Windows: `.\.venv\Scripts\Activate.ps1`
+
+4. **자세한 정보**
+   - 성능 최적화: `docs/MACOS_OPTIMIZATION.md` 참조
+   - 벤치마크 및 문제 해결 포함
 
 ---
 **이 프로젝트에서 활동하는 모든 AI는 위 프로토콜을 엄격히 준수할 것을 약속한다.**
