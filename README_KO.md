@@ -175,9 +175,10 @@ pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ### 0️⃣ 설치 확인
 설치 완료 후, Synapse가 정상적으로 설치되었는지 확인합니다:
 ```bash
-python -m synapse --help
+synapse --help
 ```
 명령어 목록이 나타나면 준비가 완료된 것입니다!
+(Windows에서 실행이 안 될 경우 `python -m synapse --help`를 사용하세요.)
 
 ### 1️⃣ 초기화
 ```bash
@@ -187,25 +188,25 @@ python -m synapse init
 
 ### 2️⃣ 분석
 ```bash
-python -m synapse analyze .           # 증분 분석 (빠름)
-python -m synapse analyze . --full    # 전체 재인덱싱
-python -m synapse analyze . --verbose # 디버그 모드
+synapse analyze .           # 증분 분석 (빠름)
+synapse analyze . --full    # 전체 재인덱싱
+synapse analyze . --verbose # 디버그 모드
 ```
 
 ### 3️⃣ 검색
 ```bash
-python -m synapse search "로그인 핸들러"
-python -m synapse search "auth" --hybrid  # 벡터 + 그래프
+synapse search "로그인 핸들러"
+synapse search "auth" --hybrid  # 벡터 + 그래프
 ```
 
 ### 4️⃣ 의존성 확인
 ```bash
-python -m synapse graph src/auth.py
+synapse graph src/auth.py
 ```
 
 ### 5️⃣ 감시 시작 (선택)
 ```bash
-python -m synapse watch start --daemon
+synapse watch start --daemon
 ```
 
 <details>
@@ -266,20 +267,20 @@ cp AI_RULES_KO.md your-project/.cursorrules
 
 | 명령어 | 설명 |
 |--------|------|
-| `python -m synapse init` | 프로젝트 초기화 |
-| `python -m synapse analyze .` | 증분 분석 |
-| `python -m synapse analyze . --full` | 전체 재인덱싱 |
-| `python -m synapse analyze . --verbose` | 디버그 로깅 |
-| `python -m synapse search "<쿼리>"` | 시맨틱 검색 |
-| `python -m synapse search "<쿼리>" --hybrid` | 벡터 + 그래프 검색 |
-| `python -m synapse graph <파일>` | 의존성 표시 |
-| `python -m synapse ask "<질문>" --think` | 딥 추론 |
-| `python -m synapse context <파일>` | 계층적 컨텍스트 |
-| `python -m synapse skeleton <파일>` | 코드 스켈레톤화 |
-| `python -m synapse watch start` | 파일 감시 시작 |
-| `python -m synapse watch start --daemon` | 백그라운드 감시 |
-| `python -m synapse watch status` | 감시 상태 확인 |
-| `python -m synapse watch stop` | 감시 중지 |
+| `synapse init` | 프로젝트 초기화 |
+| `synapse analyze .` | 증분 분석 |
+| `synapse analyze . --full` | 전체 재인덱싱 |
+| `synapse analyze . --verbose` | 디버그 로깅 |
+| `synapse search "<쿼리>"` | 시맨틱 검색 |
+| `synapse search "<쿼리>" --hybrid` | 벡터 + 그래프 검색 |
+| `synapse graph <파일>` | 의존성 표시 |
+| `synapse ask "<질문>" --think` | 딥 추론 |
+| `synapse context <파일>` | 계층적 컨텍스트 |
+| `synapse skeleton <파일>` | 코드 스켈레톤화 |
+| `synapse watch start` | 파일 감시 시작 |
+| `synapse watch start --daemon` | 백그라운드 감시 |
+| `synapse watch status` | 감시 상태 확인 |
+| `synapse watch stop` | 감시 중지 |
 
 ---
 

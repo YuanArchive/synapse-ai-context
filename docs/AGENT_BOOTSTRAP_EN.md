@@ -60,7 +60,7 @@ After running the commands above, verify:
 | Issue | Solution |
 |-------|----------|
 | synapse command not found | `pip install git+https://github.com/YuanArchive/synapse-ai-context.git` |
-| ChromaDB error | `rm -rf .synapse/db && synapse analyze . --full` |
+| ChromaDB error | `rm -rf .synapse/db && python -m synapse analyze . --full` |
 | Watcher failure | `python -m synapse watch stop && python -m synapse watch start --daemon` |
 
 ---

@@ -46,7 +46,7 @@ pip install -e ./synapse-ai-context
    ```
 3. Verify installation:
    ```bash
-   python -m synapse --help
+   synapse --help
    ```
 
 ---
@@ -55,7 +55,7 @@ pip install -e ./synapse-ai-context
 
 ```bash
 cd your-project
-python -m synapse init
+synapse init
 ```
 
 **Created structure:**
@@ -82,19 +82,19 @@ your-project/
 
 ### Incremental Analysis (Default, Fast)
 ```bash
-python -m synapse analyze .
+synapse analyze .
 ```
 - Only reindexes changed files
 - MD5 hash-based change detection
 
 ### Full Reanalysis
 ```bash
-python -m synapse analyze . --full
+synapse analyze . --full
 ```
 
 ### Verbose Mode (Debugging)
 ```bash
-python -m synapse analyze . --verbose
+synapse analyze . --verbose
 ```
 - Outputs detailed debug information
 - Saves logs to `.synapse/synapse_YYYYMMDD.log`
@@ -114,17 +114,17 @@ INFO: Analysis complete: 3 files processed
 
 ### Semantic Search
 ```bash
-python -m synapse search "login handler"
+synapse search "login handler"
 ```
 
 ### Hybrid Search (Vector + Graph)
 ```bash
-python -m synapse search "auth" --hybrid
+synapse search "auth" --hybrid
 ```
 
 ### Compressed Results
 ```bash
-python -m synapse search "query" --compress
+synapse search "query" --compress
 ```
 
 ---
@@ -132,7 +132,7 @@ python -m synapse search "query" --compress
 ## 5. Dependency Graph
 
 ```bash
-python -m synapse graph src/services/auth.py
+synapse graph src/services/auth.py
 ```
 
 **Output:**
@@ -150,23 +150,23 @@ python -m synapse graph src/services/auth.py
 
 ### Foreground Mode
 ```bash
-python -m synapse watch start
+synapse watch start
 # Ctrl+C to stop
 ```
 
 ### Background Daemon
 ```bash
-python -m synapse watch start --daemon
+synapse watch start --daemon
 ```
 
 ### Check Status
 ```bash
-python -m synapse watch status
+synapse watch status
 ```
 
 ### Stop
 ```bash
-python -m synapse watch stop
+synapse watch stop
 ```
 
 ### How It Works
@@ -188,19 +188,19 @@ project/.agent/AI_RULES_EN.md (or _KO.md)
 
 #### Before Starting Work
 ```bash
-python -m synapse analyze .                  # Update index
-python -m synapse watch start --daemon       # Or start watcher
+synapse analyze .                  # Update index
+synapse watch start --daemon       # Or start watcher
 ```
 
 #### Before Modifying Code
 ```bash
-python -m synapse search "feature to modify"  # Search code
-python -m synapse graph target_file.py       # Check impact
+synapse search "feature to modify"  # Search code
+synapse graph target_file.py       # Check impact
 ```
 
 #### On Error
 ```bash
-python -m synapse ask "error message" --think  # CoT reasoning
+synapse ask "error message" --think  # CoT reasoning
 ```
 
 ---
@@ -211,7 +211,7 @@ Steps AI follows when errors occur:
 
 ### Step 1: Collect Verbose Logs
 ```bash
-python -m synapse analyze . --verbose
+synapse analyze . --verbose
 ```
 
 ### Step 2: Check Log Files
@@ -221,7 +221,7 @@ cat .synapse/synapse_*.log | tail -50
 
 ### Step 3: Analyze Error
 ```bash
-python -m synapse ask "<error message>" --think
+synapse ask "<error message>" --think
 ```
 
 ### Step 4: Error Type Reference
@@ -239,20 +239,20 @@ python -m synapse ask "<error message>" --think
 
 | Command | Description |
 |---------|-------------|
-| `python -m synapse init` | Initialize project |
-| `python -m synapse analyze .` | Incremental analysis |
-| `python -m synapse analyze . --full` | Full reindex |
-| `python -m synapse analyze . --verbose` | Verbose logging |
-| `python -m synapse search "<query>"` | Semantic search |
-| `python -m synapse search "<query>" --hybrid` | Hybrid search |
-| `python -m synapse graph <file>` | Check dependencies |
-| `python -m synapse ask "<question>" --think` | Deep reasoning |
-| `python -m synapse context <file>` | Hierarchical context |
-| `python -m synapse skeleton <file>` | Code skeletonization |
-| `python -m synapse watch start` | Start watcher |
-| `python -m synapse watch start --daemon` | Background watcher |
-| `python -m synapse watch status` | Check status |
-| `python -m synapse watch stop` | Stop watcher |
+| `synapse init` | Initialize project |
+| `synapse analyze .` | Incremental analysis |
+| `synapse analyze . --full` | Full reindex |
+| `synapse analyze . --verbose` | Verbose logging |
+| `synapse search "<query>"` | Semantic search |
+| `synapse search "<query>" --hybrid` | Hybrid search |
+| `synapse graph <file>` | Check dependencies |
+| `synapse ask "<question>" --think` | Deep reasoning |
+| `synapse context <file>` | Hierarchical context |
+| `synapse skeleton <file>` | Code skeletonization |
+| `synapse watch start` | Start watcher |
+| `synapse watch start --daemon` | Background watcher |
+| `synapse watch status` | Check status |
+| `synapse watch stop` | Stop watcher |
 
 ---
 
@@ -277,8 +277,8 @@ python -m synapse watch start --daemon
 ### Reset Everything
 ```bash
 rm -rf .synapse
-python -m synapse init
-python -m synapse analyze . --full
+synapse init
+synapse analyze . --full
 ```
 
 ### File Encoding Error
