@@ -227,7 +227,6 @@ synapse init
 
 #### ⚠️ 폴백 사용
 ```bash
-```bash
 # VS Code 밖에서 실행하거나 가상환경 인식 실패 시
 python -m synapse analyze .
 ```
