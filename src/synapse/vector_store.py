@@ -56,8 +56,13 @@ if _CHROMADB_AVAILABLE:
 
         def __call__(self, input: chromadb.Documents) -> chromadb.Embeddings:
             try:
-                # Jina 모델 인코딩
-                embeddings = self.model.encode(input, convert_to_numpy=True)
+                # Encode with controlled batch size to prevent MPS/GPU memory overflow
+                embeddings = self.model.encode(
+                    input,
+                    convert_to_numpy=True,
+                    batch_size=4,
+                    show_progress_bar=False,
+                )
                 return embeddings.tolist()
             except Exception as e:
                 console.print(f"[red]문서 인코딩 오류: {e}[/red]")
@@ -103,33 +108,31 @@ class VectorStore:
             return
             
         try:
-            # 메모리 문제 방지를 위한 배치 처리
-            # 환경 변수로 배치 크기 제어 가능 (기본값: 12)
-            batch_size = int(os.getenv("SYNAPSE_BATCH_SIZE", "12"))
+            # Batch size tuned for Apple Silicon unified memory (~32GB)
+            # Jina v2 max sequence: 8192 tokens (~16K chars)
+            # Keep upsert batches small to limit peak memory
+            max_doc_chars = int(os.getenv("SYNAPSE_MAX_DOC_CHARS", "8000"))
+            batch_size = int(os.getenv("SYNAPSE_BATCH_SIZE", "6"))
             total_batches = (len(documents) + batch_size - 1) // batch_size
-            
+
             for i in range(0, len(documents), batch_size):
                 batch_docs = documents[i : i + batch_size]
                 batch_metas = metadatas[i : i + batch_size]
                 batch_ids = ids[i : i + batch_size]
-                
-                # Debug input sizes
-                for j, doc in enumerate(batch_docs):
-                    if len(doc) > 30000:
-                        console.print(f"[bold red]WARNING: Skipping/Truncating huge document ({len(doc)} chars): {batch_ids[j]}[/bold red]")
-                        batch_docs[j] = doc[:30000] # Truncate aggressively
 
-                console.print(f"[dim]DEBUG: Upserting batch {i//batch_size + 1}/{total_batches} ({len(batch_docs)} docs)...[/dim]")
+                # Truncate oversized documents to fit model context
+                for j, doc in enumerate(batch_docs):
+                    if len(doc) > max_doc_chars:
+                        console.print(f"[yellow]Truncating large document ({len(doc)} → {max_doc_chars} chars): {batch_ids[j]}[/yellow]")
+                        batch_docs[j] = doc[:max_doc_chars]
+
+                if not quiet:
+                    console.print(f"[dim]Batch {i//batch_size + 1}/{total_batches} ({len(batch_docs)} docs)...[/dim]")
                 self.collection.upsert(
                     documents=batch_docs,
                     metadatas=batch_metas,
                     ids=batch_ids
                 )
-                console.print(f"[dim]DEBUG: Upsert finished.[/dim]")
- 
-                if not quiet:
-                    # 간단한 진행 표시기 (필요시 구현)
-                    console.print(f"[dim]Processed batch {i//batch_size + 1}/{total_batches}[/dim]")
             
             if not quiet:
                 console.print(f"[green]{len(documents)}개 스니펫 인덱싱 완료.[/green]")
