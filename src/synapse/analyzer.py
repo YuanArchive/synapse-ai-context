@@ -1,7 +1,10 @@
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+import concurrent.futures
+import multiprocessing
+import os
 
 console = Console()
 
@@ -13,6 +16,38 @@ from .exceptions import SynapseError, IndexingError, ParserError
 from .logger import get_logger
 import networkx as nx
 
+# Global variable for worker processes to hold their own parser instance
+_global_parser = None
+
+def _get_worker_parser():
+    """
+    Lazy initialization of CodeParser in worker process.
+    """
+    global _global_parser
+    if _global_parser is None:
+        _global_parser = CodeParser()
+    return _global_parser
+
+def process_file_wrapper(file_path: Path) -> Tuple[Path, Optional[Dict[str, Any]], Optional[str], Optional[str]]:
+    """
+    Worker function to process a single file.
+    Returns: (file_path, parse_result, file_content, error_msg)
+    """
+    try:
+        parser = _get_worker_parser()
+        result = parser.parse_file(file_path)
+        
+        content = ""
+        if result:
+            try:
+                with open(file_path, "r", encoding="utf-8", errors="replace") as f:
+                    content = f.read()
+            except Exception as e:
+                return file_path, None, None, str(e)
+                
+        return file_path, result, content, None
+    except Exception as e:
+        return file_path, None, None, str(e)
 
 class ProjectAnalyzer:
     """
@@ -37,7 +72,9 @@ class ProjectAnalyzer:
             ".vscode",
             "site-packages",
         ]
+        # Parser in main process is only for lightweight tasks if needed
         self.parser = CodeParser()
+        
         # Store DB inside a hidden .synapse folder in the target project
         self.db_dir = self.project_path / ".synapse"
         
@@ -84,9 +121,66 @@ class ProjectAnalyzer:
                 files.append(path)
         return files
 
-    def analyze(self, json_output: bool = False):
+    def _aggregate_results(self, file_path: Path, result: Dict, content: str, documents: List, metadatas: List, ids: List):
         """
-        Main analysis pipeline.
+        Aggregates results from worker execution into the main collections.
+        """
+        self.results.append(result)
+
+        # Register file in graph
+        self.code_graph.add_file(file_path.as_posix(), language=result["language"])
+
+        # Register definitions
+        for definition in result.get("definitions", []):
+            self.code_graph.add_definition(definition, file_path.as_posix())
+
+        # Register calls (references)
+        for call in result.get("calls", []):
+            self.code_graph.add_call(file_path.as_posix(), call)
+
+        # 1. 파일 전체 인덱싱 (기존 호환성 유지)
+        documents.append(content)
+        metadatas.append(
+            {
+                "path": file_path.as_posix(),
+                "language": result["language"],
+                "type": "file",
+            }
+        )
+        ids.append(f"file:{file_path.as_posix()}")
+        
+        # 2. 함수/클래스 단위 Fine-grained 인덱싱
+        symbols = result.get("symbols", [])
+        for symbol in symbols:
+            symbol_name = symbol.get("name", "")
+            symbol_code = symbol.get("code", "")
+            symbol_type = symbol.get("type", "function")
+            
+            if not symbol_name or not symbol_code:
+                continue
+            
+            # Docstring을 코드 앞에 추가 (검색 정확도 향상)
+            docstring = symbol.get("docstring", "")
+            searchable_content = symbol_code
+            if docstring:
+                searchable_content = f"# {docstring}\n{symbol_code}"
+            
+            symbol_id = f"symbol:{file_path.as_posix()}:{symbol_name}"
+            
+            documents.append(searchable_content)
+            metadatas.append({
+                "path": file_path.as_posix(),
+                "symbol": symbol_name,
+                "type": symbol_type,
+                "language": result["language"],
+                "start_line": symbol.get("start_line", 0),
+                "end_line": symbol.get("end_line", 0),
+            })
+            ids.append(symbol_id)
+
+    def analyze(self, json_output: bool = False, num_workers: int = None):
+        """
+        Main analysis pipeline (Parallelized).
         """
         if not self.project_path.exists():
             error_msg = f"Path {self.project_path} does not exist."
@@ -96,31 +190,53 @@ class ProjectAnalyzer:
             return
 
         files = self.scan_files()
+        
+        # workers count: default to CPU count, but at least 1
+        max_workers = num_workers or os.cpu_count() or 1
+        
         if not json_output:
             console.print(
-                f"[bold blue]Analyzing {len(files)} files with Tree-sitter...[/bold blue]"
+                f"[bold blue]Analyzing {len(files)} files with {max_workers} workers...[/bold blue]"
             )
 
         documents = []
         metadatas = []
         ids = []
 
-        if json_output:
-            # Non-interactive mode
-            for file_path in files:
-                self._process_file(file_path, documents, metadatas, ids)
-        else:
-            # Interactive mode with progress bar
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-            ) as progress:
-                task = progress.add_task("Parsing & Indexing...", total=len(files))
+        # Initialize FileTracker for full analysis (to populate initial state)
+        tracker = FileTracker(self.db_dir)
+        tracker.update_batch(files) # We assume all valid if success
+        tracker.save()
 
-                for file_path in files:
-                    self._process_file(file_path, documents, metadatas, ids)
-                    progress.advance(task)
+        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+            # Prepare futures
+            future_to_file = {executor.submit(process_file_wrapper, f): f for f in files}
+            
+            if json_output:
+                for future in concurrent.futures.as_completed(future_to_file):
+                    f_path, res, content, err = future.result()
+                    if res and content:
+                        self._aggregate_results(f_path, res, content, documents, metadatas, ids)
+            else:
+                with Progress(
+                    SpinnerColumn(),
+                    TextColumn("[progress.description]{task.description}"),
+                    BarColumn(),
+                    TaskProgressColumn(),
+                    console=console,
+                ) as progress:
+                    task = progress.add_task("Parsing & Indexing...", total=len(files))
+                    
+                    for future in concurrent.futures.as_completed(future_to_file):
+                        f_path, res, content, err = future.result()
+                        if res and content:
+                            self._aggregate_results(f_path, res, content, documents, metadatas, ids)
+                        elif err:
+                            # Log error but continue
+                            logger = get_logger()
+                            logger.warning(f"Failed to process {f_path}: {err}")
+                        
+                        progress.advance(task)
 
         # 4. Batch Insert into ChromaDB
         if documents:
@@ -166,7 +282,6 @@ class ProjectAnalyzer:
         # Save summary to context.json
         try:
             import json
-
             with open(self.db_dir / "context.json", "w", encoding="utf-8") as f:
                 json.dump(summary, f, indent=2)
         except:
@@ -174,81 +289,9 @@ class ProjectAnalyzer:
 
         return summary
 
-    def _process_file(self, file_path, documents, metadatas, ids):
-        try:
-            result = self.parser.parse_file(file_path)
-            if result:
-                self.results.append(result)
-
-                # Register file in graph
-                self.code_graph.add_file(file_path.as_posix(), language=result["language"])
-
-                # Register definitions
-                for definition in result.get("definitions", []):
-                    self.code_graph.add_definition(definition, file_path.as_posix())
-
-                # Register calls (references)
-                for call in result.get("calls", []):
-                    self.code_graph.add_call(file_path.as_posix(), call)
-
-                with open(file_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-
-                # 1. 파일 전체 인덱싱 (기존 호환성 유지)
-                documents.append(content)
-                metadatas.append(
-                    {
-                        "path": file_path.as_posix(),
-                        "language": result["language"],
-                        "type": "file",
-                    }
-                )
-                ids.append(f"file:{file_path.as_posix()}")
-                
-                # 2. 함수/클래스 단위 Fine-grained 인덱싱 (Phase 3 추가)
-                symbols = result.get("symbols", [])
-                for symbol in symbols:
-                    symbol_name = symbol.get("name", "")
-                    symbol_code = symbol.get("code", "")
-                    symbol_type = symbol.get("type", "function")
-                    
-                    if not symbol_name or not symbol_code:
-                        continue
-                    
-                    # Docstring을 코드 앞에 추가 (검색 정확도 향상)
-                    docstring = symbol.get("docstring", "")
-                    searchable_content = symbol_code
-                    if docstring:
-                        searchable_content = f"# {docstring}\n{symbol_code}"
-                    
-                    symbol_id = f"symbol:{file_path.as_posix()}:{symbol_name}"
-                    
-                    documents.append(searchable_content)
-                    metadatas.append({
-                        "path": file_path.as_posix(),
-                        "symbol": symbol_name,
-                        "type": symbol_type,
-                        "language": result["language"],
-                        "start_line": symbol.get("start_line", 0),
-                        "end_line": symbol.get("end_line", 0),
-                    })
-                    ids.append(symbol_id)
-
-        except Exception as e:
-            # Log warning instead of silent failure
-            logger = get_logger()
-            logger.warning(f"Failed to process file {file_path}: {e}")
-            pass
-
-    def analyze_incremental(self, json_output: bool = False) -> Dict[str, Any]:
+    def analyze_incremental(self, json_output: bool = False, num_workers: int = None) -> Dict[str, Any]:
         """
-        증분 분석: 변경된 파일만 재인덱싱합니다.
-        
-        FileTracker를 사용하여 MD5 해시 기반으로 변경된 파일을 감지하고,
-        해당 파일만 재파싱/재인덱싱하여 성능을 최적화합니다.
-        
-        Returns:
-            Dict: 분석 결과 요약 (changed_files, unchanged_files 등)
+        증분 분석: 변경된 파일만 재인덱싱합니다. (Parallelized)
         """
         if not self.project_path.exists():
             error_msg = f"Path {self.project_path} does not exist."
@@ -310,10 +353,12 @@ class ProjectAnalyzer:
             # 트래커에서 제거
             tracker.remove(deleted_file)
             
-            # 벡터 스토어에서 삭제 (ID 패턴으로 삭제)
+            # 벡터 스토어에서 삭제
             try:
                 file_id = f"file:{deleted_file}"
                 self.vector_store.collection.delete(ids=[file_id])
+                # 심볼 문서도 삭제 (ChromaDB where절 사용)
+                self.vector_store.collection.delete(where={"path": deleted_file})
             except:
                 pass
         
@@ -321,7 +366,7 @@ class ProjectAnalyzer:
         for modified_file in changes.modified:
             path_posix = Path(modified_file).as_posix()
             
-            # 그래프에서 기존 노드 제거 (연관 엣지도 함께 제거됨)
+            # 그래프에서 기존 노드 제거
             if path_posix in self.code_graph.graph:
                 self.code_graph.graph.remove_node(path_posix)
             
@@ -329,31 +374,39 @@ class ProjectAnalyzer:
             try:
                 file_id = f"file:{path_posix}"
                 self.vector_store.collection.delete(ids=[file_id])
-                
-                # 심볼 문서도 삭제 (prefix 매칭)
-                # ChromaDB는 where 조건으로 삭제 가능
-                self.vector_store.collection.delete(
-                    where={"path": path_posix}
-                )
+                self.vector_store.collection.delete(where={"path": path_posix})
             except:
                 pass
         
-        # 변경/추가된 파일 처리
-        if json_output:
-            for file_path in files_to_process:
-                self._process_file(file_path, documents, metadatas, ids)
-        else:
-            from rich.progress import Progress, SpinnerColumn, TextColumn
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-            ) as progress:
-                task = progress.add_task("Parsing & Indexing...", total=len(files_to_process))
-                
-                for file_path in files_to_process:
-                    self._process_file(file_path, documents, metadatas, ids)
-                    progress.advance(task)
+        # 변경/추가된 파일 병렬 처리
+        max_workers = num_workers or os.cpu_count() or 1
+        
+        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+            future_to_file = {executor.submit(process_file_wrapper, f): f for f in files_to_process}
+            
+            if json_output:
+                for future in concurrent.futures.as_completed(future_to_file):
+                    f_path, res, content, err = future.result()
+                    if res and content:
+                        self._aggregate_results(f_path, res, content, documents, metadatas, ids)
+            else:
+                with Progress(
+                    SpinnerColumn(),
+                    TextColumn("[progress.description]{task.description}"),
+                    BarColumn(),
+                    TaskProgressColumn(),
+                    console=console,
+                ) as progress:
+                    task = progress.add_task("Parsing & Indexing...", total=len(files_to_process))
+                    
+                    for future in concurrent.futures.as_completed(future_to_file):
+                        f_path, res, content, err = future.result()
+                        if res and content:
+                            self._aggregate_results(f_path, res, content, documents, metadatas, ids)
+                        elif err:
+                            logger = get_logger()
+                            logger.warning(f"Failed to process {f_path}: {err}")
+                        progress.advance(task)
         
         # 벡터 스토어에 새 문서 추가
         if documents:

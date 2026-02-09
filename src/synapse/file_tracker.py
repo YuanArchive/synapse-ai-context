@@ -90,19 +90,22 @@ class FileTracker:
     
     @staticmethod
     def compute_hash(file_path: Path) -> str:
-        """파일의 MD5 해시 계산"""
+        """파일의 MD5 해시 계산 (Optimized buffer size)"""
         hasher = hashlib.md5()
         try:
             with open(file_path, 'rb') as f:
-                # 큰 파일을 위해 청크 단위로 읽기
-                for chunk in iter(lambda: f.read(8192), b''):
+                # 64KB buffer for better performance
+                for chunk in iter(lambda: f.read(65536), b''):
                     hasher.update(chunk)
             return hasher.hexdigest()
         except (IOError, OSError):
             return ""
     
-    def get_file_state(self, file_path: Path) -> Optional[FileState]:
-        """파일의 현재 상태 가져오기"""
+    def get_file_state(self, file_path: Path, compute_hash_if_missing: bool = True) -> Optional[FileState]:
+        """
+        파일의 현재 상태 가져오기.
+        compute_hash_if_missing: True이면 해시를 계산, False이면 해시 없이 메타데이터만 반환 (비교용)
+        """
         if not file_path.exists():
             return None
         
@@ -110,7 +113,7 @@ class FileTracker:
             stat = file_path.stat()
             return FileState(
                 path=str(file_path),
-                hash=self.compute_hash(file_path),
+                hash=self.compute_hash(file_path) if compute_hash_if_missing else "",
                 mtime=stat.st_mtime,
                 size=stat.st_size
             )
@@ -120,12 +123,7 @@ class FileTracker:
     def get_changes(self, current_files: List[Path]) -> ChangeSet:
         """
         현재 파일 목록과 저장된 상태를 비교하여 변경 사항 반환.
-        
-        Args:
-            current_files: 현재 프로젝트의 파일 목록
-            
-        Returns:
-            ChangeSet: 추가/수정/삭제/변경없음 파일 목록
+        Smart Cache: mtime/size가 같으면 해시 계산을 건너뜀.
         """
         added: List[str] = []
         modified: List[str] = []
@@ -139,26 +137,55 @@ class FileTracker:
         
         for file_path in current_files:
             path_str = str(file_path)
-            current_state = self.get_file_state(file_path)
             
-            if current_state is None:
+            # 1. 메타데이터만 먼저 가져옴 (해시 계산 X)
+            try:
+                stat = file_path.stat()
+                current_mtime = stat.st_mtime
+                current_size = stat.st_size
+            except OSError:
                 continue
-            
+
             if path_str not in self.states:
-                # 새로 추가된 파일
-                added.append(path_str)
+                # 2. 새로운 파일은 무조건 해시 계산
+                state = self.get_file_state(file_path, compute_hash_if_missing=True)
+                if state:
+                    self.states[path_str] = state # Update memory state immediately
+                    added.append(path_str)
             else:
                 stored_state = self.states[path_str]
-                # 해시 비교로 변경 감지
-                if current_state.hash != stored_state.hash:
-                    modified.append(path_str)
-                else:
+                
+                # 3. Smart Check: mtime과 size가 같으면 변경 없음으로 간주
+                # (주의: 매우 드물게 내용만 바뀌고 mtime/size가 같을 수 있으나, 개발 환경에선 드묾)
+                if current_mtime == stored_state.mtime and current_size == stored_state.size:
                     unchanged.append(path_str)
+                else:
+                    # 4. 메타데이터가 다르면 해시를 계산하여 '진짜' 변경인지 확인
+                    new_hash = self.compute_hash(file_path)
+                    
+                    if new_hash != stored_state.hash:
+                        # 상태 업데이트
+                        self.states[path_str] = FileState(
+                            path=path_str,
+                            hash=new_hash,
+                            mtime=current_mtime,
+                            size=current_size
+                        )
+                        modified.append(path_str)
+                    else:
+                        # 해시는 같지만 mtime만 변한 경우 (touch 등) -> 상태만 업데이트하고 unchanged 분류
+                        self.states[path_str] = FileState(
+                            path=path_str,
+                            hash=new_hash,
+                            mtime=current_mtime, # update mtime
+                            size=current_size
+                        )
+                        unchanged.append(path_str)
         
         return ChangeSet(
             added=added,
             modified=modified,
-            deleted=deleted,
+            deleted=deleted, # Note: deleted keys are removed from self.states in remove() called by analyzer
             unchanged=unchanged
         )
     
