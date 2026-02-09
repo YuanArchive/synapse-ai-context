@@ -130,17 +130,50 @@
 
 ## 📦 설치
 
-### 옵션 1: GitHub에서 설치 (권장)
+### 🚀 옵션 1: 원클릭 자동 설치 (권장 - Windows)
+
+**클릭 한 번으로 모든 것을 설치합니다!**
+
+1. 이 저장소를 클론합니다:
+   ```bash
+   git clone https://github.com/YuanArchive/synapse-ai-context.git
+   cd synapse-ai-context
+   ```
+
+2. **`scripts\setup.bat`를 더블클릭하세요.**
+
+**포함 내용**:
+- ✅ Python 3.12.12 자동 설치 (없을 경우)
+- ✅ 가상환경 자동 생성 (`.venv`)
+- ✅ Synapse 툴 설치
+- ✅ VS Code 설정 자동 구성
+- ✅ `synapse` 명령어 직접 사용 가능
+
+설치 후 바로 사용하세요:
+```bash
+synapse --help
+synapse init
+synapse analyze .
+```
+
+> [!TIP]
+> 가상환경이 자동으로 활성화됩니다! **`python -m` 접두사 없이** `synapse` 명령어를 바로 사용할 수 있습니다.
+
+---
+
+### 옵션 2: GitHub에서 수동 설치
 ```bash
 pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ```
 
-### 옵션 2: 개발 모드
+### 옵션 3: 개발 모드
 ```bash
 git clone https://github.com/YuanArchive/synapse-ai-context.git
 cd synapse-ai-context
 pip install -e .
 ```
+
+---
 
 ### 시스템 요구사항
 
@@ -151,14 +184,14 @@ pip install -e .
 > - GPU 가속 사용 시 CUDA 지원 PyTorch 필요 (선택사항)
 
 **필수 구성 요소**:
-- **C/C++ 컴파일러**: 일부 시스템에서 `tree-sitter` 컴파일을 위해 필요할 수 있습니다.
+- **C/C++ 컴파일러**: Windows에서 `tree-sitter` 컴파일 시 필요 ([Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/))
 - 의존성 자동 설치: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
 - **권장 사양**: RAM 8GB 이상 (쾌적한 사용을 위해 16GB 권장 - ChromaDB/ML 모델 구동용)
 
-> [!TIP]
-> **Windows 사용자 주의**: `synapse` 명령어가 `Fatal error in launcher` 오류와 함께 실행되지 않는다면, 모든 명령어 앞에 **`python -m`**을 붙여서 실행하세요. (예: `python -m synapse init`)
+> [!NOTE]
+> **원클릭 설치 사용 시** Python과 컴파일러가 자동으로 설치되므로 별도 준비 불필요합니다.
 
-### 🛡️ 권장 사항: 가상환경 사용
+### 🛡️ 수동 설치 시: 가상환경 사용
 
 다른 프로젝트와의 의존성 충돌을 방지하기 위해 가상환경 사용을 강력히 권장합니다.
 

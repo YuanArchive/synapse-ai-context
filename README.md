@@ -130,17 +130,50 @@ We parse everything thrown at us. Powered by **Tree-sitter**.
 
 ## 📦 Installation
 
-### Option 1: From GitHub (Recommended)
+### 🚀 Option 1: One-Click Auto Install (Recommended - Windows)
+
+**Install everything with a single click!**
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/YuanArchive/synapse-ai-context.git
+   cd synapse-ai-context
+   ```
+
+2. **Double-click `scripts\setup.bat`**
+
+**What's included:**
+- ✅ Python 3.12.12 automatic installation (if not present)
+- ✅ Virtual environment auto-creation (`.venv`)
+- ✅ Synapse tool installation
+- ✅ VS Code automatic configuration
+- ✅ Direct `synapse` command usage
+
+Use immediately after installation:
+```bash
+synapse --help
+synapse init
+synapse analyze .
+```
+
+> [!TIP]
+> Virtual environment activates automatically! Use `synapse` commands **without the `python -m` prefix**.
+
+---
+
+### Option 2: Manual Install from GitHub
 ```bash
 pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ```
 
-### Option 2: Development Mode
+### Option 3: Development Mode
 ```bash
 git clone https://github.com/YuanArchive/synapse-ai-context.git
 cd synapse-ai-context
 pip install -e .
 ```
+
+---
 
 ### System Requirements
 
@@ -151,14 +184,14 @@ pip install -e .
 > - CUDA-enabled PyTorch required for GPU acceleration (optional)
 
 **Prerequisites**:
-- **C/C++ Compiler**: Required for `tree-sitter` compilation on some systems.
+- **C/C++ Compiler**: Required for `tree-sitter` compilation on Windows ([Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/))
 - Dependencies auto-installed: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
 - **System Spec**: 8GB+ RAM required (16GB recommended for smooth ChromaDB/ML operations)
 
-> [!TIP]
-> **Windows Users**: If the `synapse` command fails with a `Fatal error in launcher`, run all commands using **`python -m synapse`** instead. (e.g., `python -m synapse init`)
+> [!NOTE]
+> **When using one-click install**, Python and compiler are installed automatically—no manual preparation needed.
 
-### 🛡️ Recommended: Using Virtual Environment
+### 🛡️ For Manual Install: Using Virtual Environment
 
 To avoid dependency conflicts with other projects, it is highly recommended to use a virtual environment.
 

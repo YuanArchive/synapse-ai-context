@@ -182,6 +182,64 @@ synapse analyze . -w 6
 > **Troubleshooting**: GPU 관련 문제는 `docs/PERFORMANCE_TUNING.md`를 참조하세요.
 
 ---
+
+## 🐍 8. 가상환경 자동 인식 (Virtual Environment)
+
+이 프로젝트는 `.venv` 가상환경을 사용합니다. 원클릭 설치 사용 시 자동으로 설정됩니다.
+
+### 명령어 사용 규칙 (AI 필수)
+
+**AI는 다음 순서로 명령어를 사용해야 합니다:**
+
+1. **우선 시도**: `synapse <command>` (직접 사용)
+   - VS Code 터미널은 가상환경을 자동으로 활성화
+   - 원클릭 설치 사용자는 PATH 설정 완료됨
+   
+2. **실패 시 폴백**: `python -m synapse <command>`
+   - 가상환경 비활성화 상태에서도 작동
+   - 레거시 호환성 보장
+
+### 가상환경 확인 방법
+
+```powershell
+# Windows - 가상환경 활성화
+.\.venv\Scripts\Activate.ps1
+
+# 활성화 확인
+echo $env:VIRTUAL_ENV  # .venv 경로가 출력되어야 함
+
+# synapse 위치 확인
+where synapse  # .venv\Scripts\synapse.exe 출력되어야 함
+```
+
+### AI 작업 시나리오
+
+#### ✅ 올바른 사용
+```bash
+# 시나리오 1: VS Code 터미널 (가상환경 자동 활성화)
+synapse analyze .
+synapse search "test"
+
+# 시나리오 2: 수동 활성화 후
+.\.venv\Scripts\Activate.ps1
+synapse init
+```
+
+#### ⚠️ 폴백 사용
+```bash
+# VS Code 밖에서 실행하거나 가상환경 인식 실패 시
+python -m synapse analyze .
+```
+
+### 원클릭 설치 사용자 전용 기능
+
+원클릭 설치 (`scripts\setup.bat`) 사용자는:
+- ✅ VS Code 설정 자동 완료
+- ✅ 터미널 자동 가상환경 활성화
+- ✅ `synapse` 명령어 직접 사용 가능
+- ✅ Python 인터프리터 자동 선택
+
+---
 **이 프로젝트에서 활동하는 모든 AI는 위 프로토콜을 엄격히 준수할 것을 약속한다.**
 *Powered by Synapse & Jiyu*
 
