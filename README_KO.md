@@ -146,6 +146,7 @@ pip install -e .
 - **Python 3.12+** (권장: 3.12.x)
 - **C/C++ 컴파일러**: 일부 시스템에서 `tree-sitter` 컴파일을 위해 필요할 수 있습니다.
 - 의존성 자동 설치: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
+- **권장 사양:** RAM 8GB 이상 (쾌적한 사용을 위해 16GB 권장 - ChromaDB/ML 모델 구동용)
 
 > [!TIP]
 > **Windows 사용자 주의**: `synapse` 명령어가 `Fatal error in launcher` 오류와 함께 실행되지 않는다면, 모든 명령어 앞에 **`python -m`**을 붙여서 실행하세요. (예: `python -m synapse init`)
@@ -318,6 +319,16 @@ ChromaDB 프로젝트가 의존하는 Pydantic v1이 Python 3.14와 호환되지
 1. Python 3.12 설치
 2. 가상환경 생성: `py -3.12 -m venv .venv`
 3. 재설치: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
+</details>
+
+<details>
+<summary><b>Microsoft Visual C++ 14.0 or greater is required</b></summary>
+
+`tree-sitter` 설치 시 컴파일러가 필요할 수 있습니다.
+
+**해결 방법:**
+[Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)를 설치하고 **"Desktop development with C++"** 워크로드를 체크하세요.
 
 </details>
 

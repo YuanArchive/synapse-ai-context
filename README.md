@@ -146,6 +146,7 @@ pip install -e .
 - **Python 3.12+** (Recommended: 3.12.x)
 - **C/C++ Compiler**: Required for `tree-sitter` compilation on some systems.
 - Dependencies auto-installed: `chromadb`, `networkx`, `tree-sitter`, `watchdog`
+- **System Spec:** 8GB+ RAM required (16GB recommended for smooth ChromaDB/ML operations)
 
 > [!TIP]
 > **Windows Users**: If the `synapse` command fails with a `Fatal error in launcher`, run all commands using **`python -m synapse`** instead. (e.g., `python -m synapse init`)
@@ -318,6 +319,16 @@ We strongly recommend using **Python 3.12**.
 1. Install Python 3.12.
 2. Create venv: `py -3.12 -m venv .venv`
 3. Reinstall: `python -m pip install git+https://github.com/YuanArchive/synapse-ai-context.git`
+
+</details>
+
+<details>
+<summary><b>Microsoft Visual C++ 14.0 or greater is required</b></summary>
+
+The `tree-sitter` compiler may require build tools on Windows.
+
+**Solution:**
+Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and check the **"Desktop development with C++"** workload.
 
 </details>
 
