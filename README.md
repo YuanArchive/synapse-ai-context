@@ -175,9 +175,10 @@ pip install git+https://github.com/YuanArchive/synapse-ai-context.git
 ### 0️⃣ Verify Installation
 After installation, check if Synapse is correctly installed:
 ```bash
-python -m synapse --help
+synapse --help
 ```
 If you see the command list, you are good to go!
+(On Windows, if this fails, use `python -m synapse --help` instead.)
 
 ### 1️⃣ Initialize
 ```bash
@@ -187,25 +188,25 @@ python -m synapse init
 
 ### 2️⃣ Analyze
 ```bash
-python -m synapse analyze .           # Incremental (fast)
-python -m synapse analyze . --full    # Full reindex
-python -m synapse analyze . --verbose # Debug mode
+synapse analyze .           # Incremental (fast)
+synapse analyze . --full    # Full reindex
+synapse analyze . --verbose # Debug mode
 ```
 
 ### 3️⃣ Search
 ```bash
-python -m synapse search "login handler"
-python -m synapse search "auth" --hybrid  # Vector + Graph
+synapse search "login handler"
+synapse search "auth" --hybrid  # Vector + Graph
 ```
 
 ### 4️⃣ Check Dependencies
 ```bash
-python -m synapse graph src/auth.py
+synapse graph src/auth.py
 ```
 
 ### 5️⃣ Start Watcher (Optional)
 ```bash
-python -m synapse watch start --daemon
+synapse watch start --daemon
 ```
 
 <details>
@@ -246,9 +247,9 @@ The AI will automatically run all setup commands!
 
 | Rule | Command |
 |------|---------|
-| 🔍 **Search Before Strike** | `python -m synapse search <query>` before modifying |
-| 🕸️ **Check the Graph** | `python -m synapse graph <file>` before refactoring |
-| 🧠 **Deep Think on Failure** | `python -m synapse ask "<error>" --think` when stuck |
+| 🔍 **Search Before Strike** | `synapse search <query>` before modifying |
+| 🕸️ **Check the Graph** | `synapse graph <file>` before refactoring |
+| 🧠 **Deep Think on Failure** | `synapse ask "<error>" --think` when stuck |
 
 ### Global Rules Setup
 
