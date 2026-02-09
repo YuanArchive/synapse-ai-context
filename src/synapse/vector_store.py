@@ -39,8 +39,13 @@ if _CHROMADB_AVAILABLE:
             self.model_name = model_name
 
             try:
-                # GPU 확인
-                self.device = "cuda" if torch.cuda.is_available() else "cpu"
+                # GPU/accelerator detection
+                if torch.cuda.is_available():
+                    self.device = "cuda"
+                elif torch.backends.mps.is_available():
+                    self.device = "mps"
+                else:
+                    self.device = "cpu"
                 console.print(f"[dim]Jina 모델 로딩 중 ({self.device})...[/dim]")
                 
                 # Use SentenceTransformer instead of AutoModel for better stability
