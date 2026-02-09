@@ -15,11 +15,17 @@ build/
 .context/
 .agent/
 *.log
+db/
 
 # IDE
 .vscode/
 .idea/
 .vortex/
+pyrightconfig.json
+
+# Local Environment
+.envrc
+.env
 
 # OS
 .DS_Store
